@@ -1,0 +1,131 @@
+
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+	<h1 class="h2 text-info">Usuário</h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	  <div class="btn-group mr-2">
+		<button type="button"  onclick="carregarTela('../../usuario')" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Voltar</button>
+	  </div>
+	</div>
+  </div>
+  <form id="formulario">
+		<input name="id_usuario" type="hidden" value="<?=$this->registro?$this->registro['id_usuario']:''?>" id="id_usuario">
+		<div class="row">
+			<div class="form-group col-md-5">
+				<span><label for="nome">Nome: </label></span>
+				<input class="form-control" name="nome" type="text" value="<?=$this->registro?$this->registro['nome']:''?>" id="nome">
+			</div>
+			<div class="form-group col-md-7">
+				<span><label for="email">E-mail: </label></span>
+				<input class="form-control" name="email" type="text" value="<?=$this->registro?$this->registro['email']:''?>" id="email">
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-md-4">
+				<span><label for="id_perfil">Perfil: </label></span>
+				<select class="form-control" name="id_perfil" id="id_perfil" >
+					<option value="0">Escolha um perfil...</option>
+					<?
+						if(count($this->comboPerfil)>0): foreach($this->comboPerfil as $key=>$value):
+					?>
+						<option <?=($this->registro && $value['id_perfil']==$this->registro['id_perfil'])?'selected':''?> value="<?=$value['id_perfil']?>"><?=$value['descricao']?></option>
+
+					<?endforeach; endif;?>
+				</select>
+			</div>
+			<div class="form-group col-md-4">
+				<span><label for="senha">Senha: </label></span>
+				<input class="form-control" name="senha" type="password" value="" id="senha">
+			</div>
+			<div class="form-group col-md-4">
+				<span><label for="confirm_senha">Corfirmar Senha: </label></span>
+				<input class="form-control" name="confirm_senha" type="password" value="" id="confirm_senha">
+			</div>
+		</div>
+
+		<?php include('empresa.phtml');?>
+
+		<div class="row">
+			<div class="form-group col-12 text-right">
+				<button class="btn btn-success salvar"><span class="glyphicon glyphicon-floppy-disk"></span><i class="fa fa-floppy-o fa-lg"></i> Salvar</button>
+			</div>
+		</div>
+	</form>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('#nome').focus();
+
+		var PhoneMaskBehavior = function (val) {
+			return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+		  },
+		  spOptions = {
+			onKeyPress: function(val, e, field, options) {
+				field.mask(PhoneMaskBehavior.apply({}, arguments), options);
+			  }
+		  };
+
+		  $('.phone').mask(PhoneMaskBehavior, spOptions);
+		
+	});
+
+	$("#formulario").submit(function(e) {
+
+        var erro = "";
+
+        if($('#email').val().trim() < 3 || $('#email').val().trim() > 80){
+            erro = 'Email informado é inválido!';
+        }
+
+        if($('#nome').val().trim() < 1 || $('#nome').val().trim() > 80){
+            erro = 'Nome informado é inválido!';
+        }
+
+        if($('#id_perfil').val() == "0"){
+            erro = 'Informe um perfil para salvar!';
+        }
+
+        if($('#confirm_senha').val().trim() != $('#senha').val().trim()){
+            erro = 'Senhas informadas não conferem!';
+        }
+
+        // caso seja usuario novo e não está informando uma senha, porque se for alteração, não precisa informar senha
+        // então não precisa validar
+        if($('#senha').val().trim() == "" && $('#id_usuario').val().trim() == ""){
+            erro = 'Informe uma senha para salvar!';
+        }
+
+        if(erro != ""){
+            swal({
+                title: "Atenção!",
+                text: erro,
+                type: "error"
+            });
+            return false;
+        }
+		$('.salvar').hide();
+		$.ajax({
+			type: "POST",
+			url: "../../usuario/salvar",
+			data: $("#formulario").serialize(),
+			success: function(data){
+
+                // falha ao salvar
+                if(data.trim().length > 0){
+					$('.salvar').show();
+                    swal({
+                        title: "Atenção!",
+                        text: data,
+                        type: "error"
+                    });
+                // sucesso ao salvar
+				}else{
+                    carregarTela('../../usuario');
+				}
+			}
+		});
+
+		e.preventDefault();
+	});
+
+</script>

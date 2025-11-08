@@ -4,7 +4,7 @@ CREATE TABLE avaliacao_perfil (
 );
 
 CREATE TABLE avaliacao_usuario (
-    id_usuario integer NOT NULL PRIMARY KEY,
+    id_usuario serial NOT NULL PRIMARY KEY,
     nome character varying(255) NOT NULL,
     email character varying(255),
     senha character(32) NOT NULL,
@@ -96,16 +96,15 @@ CREATE TABLE avaliacao_pergunta (
 CREATE TABLE avaliacao_resposta (
     id_resposta integer NOT NULL PRIMARY KEY,
     id_envio integer,
-    id_pergunta integer,
+    pergunta text NOT NULL,
+    tipo character varying NOT NULL,
+    opcoes text,
+    grupo character varying,
+    ordem integer,
     resposta text NOT NULL,
     observacao text,
 	CONSTRAINT avaliacao_resposta_id_formulario_fkey FOREIGN KEY (id_envio)
         REFERENCES avaliacao_envio (id_envio) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-	CONSTRAINT avaliacao_resposta_id_pergunta_fkey FOREIGN KEY (id_pergunta)
-        REFERENCES avaliacao_pergunta (id_pergunta) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID

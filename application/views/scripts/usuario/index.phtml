@@ -1,0 +1,58 @@
+
+	<div class="d-flex justify-content-center justify-content-md-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2 text-info">Usuários</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <button type="button" onclick="carregarTela('../../usuario/cadastro')" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Novo Usuário</button>
+				<button type="button" onclick="carregarTela('../../usuario/login')" class="btn btn-primary"><i class="fa fa-sign-in" aria-hidden="true"></i> Histórico Login</button>
+			  </div>
+            </div>
+          </div>
+		  
+          <div class="table-responsive">
+            <table class="table table-hover" id="table_usuarios">
+				<thead>
+				<tr>
+					<th></th>			
+					<th class="text-left">NOME</th>
+					<th class="text-left">PERFIL</th>
+					<th class="text-left">EMPRESA</th>
+					<th class="text-left">SITE</th>
+				</tr>
+				</thead>
+				<tbody>
+					<?
+						if(count($this->registros)>0): foreach($this->registros as $key=>$value):
+					?>
+					<tr>	
+						<td class="text-center" width="60px">
+							<div class="btn-group">
+							  <a class="btn btn-primary" href="#" onclick="carregarTela('../../usuario/cadastro?id_usuario=<?=$value['id_usuario']?>')"><i class="fa fa-pencil-square-o"></i></a>
+							  <a class="btn btn-danger" href="#" onclick="remover('usuario',<?=$value['id_usuario']?>,'<?=$value['nome']?>')"><i class="fa fa-trash-o"></i></a>
+							</div>
+						</td>	
+						<td class="text-left align-middle"><?=$value['nome']?></td>	
+						<td class="text-left align-middle"><?=$value['descricao_perfil']?></td>		
+						<td class="text-left align-middle"><?=$value['titulo']?></td>	
+						<td class="text-left align-middle"><a target="_blank" href="<?= Empresa::urlSite($value['id_empresa']) ?>"><i class="fa fa-eye"></i> Site</a></td>										
+					</tr>
+				<?endforeach; endif;?>
+				</tbody>
+			</table>
+          </div>
+		  
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('#table_usuarios').DataTable({
+			language: {
+				url: 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
+			},
+			"columnDefs": [
+				{ orderable: false,targets: [0]}
+			],
+			"order": [[ 1, 'asc' ]]
+		});
+	} );
+
+</script>

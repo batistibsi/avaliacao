@@ -1,0 +1,92 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2 text-info">Alteração de Senha</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <button type="button" onclick="paginaInicial()" class="btn btn-danger"><i class="fa fa-close" aria-hidden="true"></i> Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<form id="formulario_usuario" method="POST" action="../../index/novasenha">
+
+    <div class="row">
+        <div class="form-group col-md-4">
+            <span><label for="senhaAtual">Senha Atual: </label></span>
+            <input class="form-control" name="senhaAtual" type="password" id="senhaAtual" maxlength="20">
+        </div>
+        <div class="form-group col-md-4">
+            <span><label for="novaSenha">Nova Senha: </label></span>
+            <input class="form-control" name="novaSenha" type="password" id="novaSenha" maxlength="20">
+        </div>
+        <div class="form-group col-md-4">
+            <span><label for="confirmaSenha">Confirmar Nova Senha: </label></span>
+            <input class="form-control" name="confirmaSenha" type="password" id="confirmaSenha" maxlength="20">
+        </div>
+        <div class="form-group col-md-4" hidden>
+            <span><label for="id_usuario">ID Usuário: </label></span>
+            <input class="form-control" name="id_usuario" type="text" value="<?= $this->idUsuario ?>" id="id_usuario">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span><i class="fa fa-floppy-o fa-lg"></i> Salvar</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#senhaAtual').focus();
+    });
+
+    $("#formulario_usuario").submit(function(e) {
+
+        var erro = "";
+
+        if ($('#senhaAtual').val().trim() == "" || $('#novaSenha').val().trim() == "" || $('#confirmaSenha').val().trim() == "") {
+            erro = 'Informe todos os campos para salvar a nova senha!';
+        }
+
+        if ($('#novaSenha').val().trim() != $('#confirmaSenha').val().trim()) {
+            erro = 'A senha foi redigitada incorretamente!';
+        }
+
+        if (erro != "") {
+            swal({
+                title: "Atenção!",
+                text: erro,
+                type: "error"
+            });
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "../../index/salvarnovasenha",
+            data: $("#formulario_usuario").serialize(),
+            success: function(data) {
+
+                // falha ao salvar
+                if (data.trim().length > 0) {
+                    swal({
+                        title: "Atenção!",
+                        text: data,
+                        type: "error"
+                    });
+                    // sucesso ao salvar
+                } else {
+                    swal({
+                        title: "Sucesso!",
+                        text: "Sua senha foi alterada com sucesso!",
+                        type: "success"
+                    }, function() {
+                        paginaInicial()
+                    });
+                }
+            }
+        });
+
+        e.preventDefault();
+    });
+</script>

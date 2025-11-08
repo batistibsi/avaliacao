@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>avaliacao</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+		<meta http-equiv="Content-Language" content="pt-BR" >
+		<meta http-equiv="pragma" content="no-cache" >
+		<meta http-equiv="Cache-Control" content="no-cache" >
+		<link rel="icon" href="./fav-icon.ico">
+		
+		<link rel="stylesheet" href="<?=Zend_Registry::get('url')?>/styles/error.css" type="text/css" media="screen" />
+	</head>
+	<body>
+		<div id="divMain">
+			<div id="divContainer">
+				<h1>O Sistema está com problemas.</h1>
+				<p>
+					<strong><?=$this->supportMessage ?></strong>
+				</p>
+			</div>
+			<? if($this->showMessages): ?>
+			<div id="divErrorMessage">
+				<strong>
+					Mensagem do erro:<br/>
+					<pre><?=$this->message ?></pre>
+				</strong>
+			</div>
+			<div id="divErrorStack">
+				<p>Stack Trace:</p>
+				<pre><?=$this->trace ?></pre>								
+			</div>
+			<? endif; ?>
+		</div>
+	</body>
+</html>

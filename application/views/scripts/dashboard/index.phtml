@@ -1,0 +1,90 @@
+ <style>
+     .chart-box {
+         position: relative;
+         /* necessário para Chart.js calcular corretamente */
+         height: 350px;
+         /* defina a altura que quiser */
+     }
+ </style>
+
+ <div class="d-flex justify-content-center justify-content-md-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+     <h2 class="h2 text-info">Dashboard</h2>
+     <form id="form_consulta" class="d-flex flex-column flex-md-row align-items-md-center">
+
+         <input style="min-width:240px; background:#fff" class="form-control text-center mb-2 mb-sm-0" type="text" id="periodo" readonly>
+         <input type='hidden' id="inicio" value="<?= Util::formatData($this->inicio) ?>" />
+         <input type='hidden' id="fim" value="<?= Util::formatData($this->fim) ?>" />
+     </form>
+ </div>
+
+ <main class="col-sm-12 col-md-12 m-0">
+    
+ </main>
+
+
+
+ <script type="text/javascript">
+     $(document).ready(function() {
+
+         var inicio = '<?= $this->inicio ?>';
+         var fim = '<?= $this->fim ?>';
+
+         $('#id_empresa').on('change', function() {
+             id_empresa = $(this).val();
+             carregarTela('../../dashboard?id_empresa=inicio=' + inicio + '&fim=' + fim);
+         });
+
+         let periodo = $('#periodo').daterangepicker({
+             startDate: new Date('<?= $this->inicio ?> 00:00:00'),
+             endDate: new Date('<?= $this->fim ?> 23:59:59'),
+             ranges: {
+                 'Hoje': [moment(), moment()],
+                 'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                 'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                 'Semana Atual': [moment().clone().startOf('isoWeek'), moment().clone().endOf('isoWeek')],
+                 'Semana Passada': [moment().clone().subtract(1, 'weeks').startOf('isoWeek'), moment().clone().subtract(1, 'weeks').endOf('isoWeek')],
+                 'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                 'Mês Atual': [moment().startOf('month'), moment().endOf('month')],
+                 'Mês Passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+             },
+             "locale": {
+                 format: 'DD/MM/YYYY',
+                 "separator": " até ",
+                 "applyLabel": "Aplicar",
+                 "cancelLabel": "Cancelar",
+                 "fromLabel": "De",
+                 "toLabel": "Até",
+                 "customRangeLabel": "Selecionar Data",
+                 "daysOfWeek": [
+                     "Dom",
+                     "Seg",
+                     "Ter",
+                     "Qua",
+                     "Qui",
+                     "Sex",
+                     "Sáb"
+                 ],
+                 "monthNames": [
+                     "Janeiro",
+                     "Fevereiro",
+                     "Março",
+                     "Abril",
+                     "Maio",
+                     "Junho",
+                     "Julho",
+                     "Agosto",
+                     "Setembro",
+                     "Outubro",
+                     "Novembro",
+                     "Dezembro"
+                 ],
+                 "firstDay": 0
+             }
+         }, function(start, end) {
+             inicio = start.format('YYYY-MM-DD');
+             fim = end.format('YYYY-MM-DD');
+             carregarTela('../../dashboard?id_empresa=' + id_empresa + '&inicio=' + inicio + '&fim=' + fim);
+         });
+
+     });
+ </script>

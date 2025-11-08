@@ -1,0 +1,45 @@
+
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2 text-info">Histórico Login</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <button type="button"  onclick="carregarTela('../../usuario/cadastro')" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Novo Usuário</button>
+				<button type="button"  onclick="carregarTela('../../usuario')" class="btn btn-primary"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Usuários</button>
+			  </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover table-condensed">
+				<thead class="label-info">
+				<tr>		
+					<th class="text-left">NOME</th>
+					<th>DATA E HORA</th>
+				</tr>
+				</thead>
+				<tbody id="corpo">
+					<?
+						if(count($this->registros)>0): foreach($this->registros as $key=>$value):
+					?>
+					<tr>	
+						<td class="text-left align-middle"><?=$value['nome']?></td>	
+						<td><span class="invisible" style="font-size:0px"><?=$value['data_hora']?></span><?=Util::formatData($value['data_hora']).' '.Util::formatHora($value['data_hora'])?></td>						
+					</tr>
+				<?endforeach; endif;?>
+				</tbody>
+			</table>
+          </div>
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('table').DataTable({
+			language: {
+				url: 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
+			},
+			"columnDefs": [
+			],
+			"order": [[ 1, 'desc' ]]
+		});
+	} );
+	
+</script>

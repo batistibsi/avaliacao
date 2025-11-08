@@ -1,0 +1,58 @@
+
+<div class="d-flex justify-content-center justify-content-md-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2 text-info">Configuração</h1>
+</div>
+
+<form id="formulario">
+
+    <?php include('empresa.phtml');?>
+
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button class="btn btn-success salvar"><i class="fa fa-floppy-o fa-lg"></i> Salvar</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    function validar() {
+        return '';
+    }
+
+    $("#formulario").submit(function(e) {
+
+        var erro = validar();
+
+        if (erro != "") {
+            swal({
+                title: "Atenção!",
+                text: erro,
+                type: "error"
+            });
+            return false;
+        }
+        $('.salvar').hide();
+        $.ajax({
+            type: "POST",
+            url: "../../empresa/salvar",
+            data: $("#formulario").serialize(),
+            success: function(data) {
+                // falha ao salvar
+                if (data.trim().length > 8) {
+                    $('.salvar').show();
+                    swal({
+                        title: "Atenção!",
+                        text: data,
+                        type: "error"
+                    });
+                    // sucesso ao salvar
+                } else {
+                    window.location.reload();
+                }
+            }
+        });
+
+        e.preventDefault();
+    });
+</script>
+

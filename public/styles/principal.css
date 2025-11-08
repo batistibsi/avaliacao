@@ -1,0 +1,233 @@
+body {
+  font-size: 1.2rem;
+  font-family: 'Montserrat' !important;
+  overflow: hidden;
+}
+
+
+/* Side Bar */
+.wrapper {
+  display: flex;
+  text-decoration: none;
+  transition: all 0.4s;
+  height: calc(100% - 103.24px);
+}
+
+.sidebar {
+  min-width: 200px;
+  max-width: 200px;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  transition: all 0.4s;
+  background-color: #eff5f1 !important;
+}
+
+.sidebar.active {
+  margin-left: -200px;
+}
+
+.sidebar-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  /*top: 48px;  Height of navbar 
+  height: calc(100vh - 48px);*/
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+.sidebar .nav-link {
+  font-weight: 500;
+  color: #097f8c;
+  margin-top: 10px;
+}
+
+.sidebar .nav-link .fa {
+  font-size: 24px;
+  margin-right: 4px;
+  color: #097f8c;
+}
+
+a{
+  color: #097f8c
+}
+
+
+.text-primary{
+  color: #097f8c !important;
+}
+
+.text-info{
+  color: #07545d !important;
+}
+
+.sidebar .nav-link.active {
+  color:  #07545d !important;
+}
+
+.btn-primary,.bg-info{
+  background-color: #097f8c !important;
+  border-color: #097f8c !important;
+}
+
+:root {
+  --dt-primary: #097f8c;
+  --dt-active:  #07545d;
+}
+.dataTables_wrapper .dataTables_paginate .pagination .page-link {
+  color: var(--dt-primary); border-color: var(--dt-primary);
+}
+.dataTables_wrapper .dataTables_paginate .pagination .page-link:hover {
+  color:#fff; background:var(--dt-primary); border-color:var(--dt-primary);
+}
+.dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link {
+  color:#fff; background:var(--dt-active); border-color:var(--dt-active);
+}
+
+/* tira o float padrão dos botões do DataTables */
+.dataTables_wrapper .dt-buttons {
+  float: none;
+}
+
+/* centraliza os botões dentro da coluna definida no dom */
+.dataTables_wrapper .dt-buttons-center .dt-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .25rem;
+}
+
+/* só para garantir que no mobile também fique centralizado em bloco */
+@media (max-width: 767.98px) {
+  .dataTables_wrapper .dt-buttons-center {
+    text-align: center;
+  }
+}
+
+.sidebar .nav-link:hover .fa,
+.sidebar .nav-link.active .fa {
+  color: inherit;
+}
+
+#content {
+  width: 100%;
+  padding: 20px;
+  min-width: height 100vh;
+  transition: all 0.4s;
+}
+
+@media (max-width: 768px) {
+  .sidebar.active {
+    margin-left: -100%;
+  }
+
+  .sidebar{
+    margin-left: 0;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .sidebarCollapse span {
+    display: none;
+  }
+
+  .nome-empresa{
+    font-size: 14px;
+  }
+
+  #nome_usuario, .full-screen-toolbar{
+    display: none;
+  }
+
+  .navbar-nav .dropdown-menu{
+    position: absolute;
+    float: left;
+  }
+
+  .navbar-brand {
+    min-width: 130px !important;
+    max-width: 130px !important;
+  }
+
+  .navbar-brand img{
+    width: 75px !important;
+    height: 21px !important;
+  }
+
+}
+
+
+
+/*
+ * Navbar
+ */
+
+.navbar-brand {
+  min-width: 220px;
+  max-width: 220px;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  font-size: 1rem;
+  background-color: #eff5f1;
+}
+
+
+.navbar-brand img{
+  width: 150px;
+  height: 43px;
+}
+
+/*
+ * Utilities
+ */
+
+.border-top { border-top: 1px solid #e5e5e5; }
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+
+.navbar .form-control {
+  padding: .75rem 1rem;
+  border-width: 0;
+  border-radius: 0;
+}
+
+#content{
+  overflow: auto;
+}
+
+.bg-light{
+  background-color: #eff5f1 !important;
+}
+
+.footer{
+  font-size: 1rem;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #e5e5e5;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+  background: #097f8c;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #097f8c;
+}

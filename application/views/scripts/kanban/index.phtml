@@ -1,0 +1,67 @@
+<div id="board-tarefa" style="overflow-y:hidden" class="row flex-row flex-sm-nowrap">
+    <? foreach ($this->estagios as $id_estagio => $estagio): ?>
+        <div class="col-sm-3 px-1 mb-2 mb-sm-0">
+            <div class="card bg-light shadow m-0 colunas-estagios">
+                <div class="card-header text-uppercase text-truncate" style="min-height:60px;background-color:<?= $estagio['cor'] ?>">
+                    <span class="d-flex justify-content-between align-items-center text-white">
+                        <div><i class="fa fa-clone"></i></div>
+                        <div style="font-size:16px"><?= $estagio['nome'] ?></div>
+                        <div><?= isset($this->registros[$id_estagio]) ? count($this->registros[$id_estagio]) : '' ?></div>
+                    </span>
+                </div>
+                <div class="card-body py-1" style="overflow:auto;--base:<?= $estagio['cor'] ?>; --pct:70%; background:color-mix(in srgb, var(--base) var(--pct), white); !important">
+                    <div class="items py-0" id="estagio_<?= $id_estagio ?>" data-id_estagio="<?= $id_estagio ?>">
+                        <? if (isset($this->registros[$id_estagio])) foreach ($this->registros[$id_estagio] as $key => $value): ?>
+                            <div style="cursor:pointer" class="card shadow-sm my-1" onclick="verTarefa(<?= $value['id_tarefa'] ?>)">
+                                <div style="font-size: .8rem" class="card-body p-3">
+                                    <h4 class="card-title p-0 m-0 text-info">
+                                        <i class="fa fa-envelope" aria-hidden="true"></i> <?= $value['formulario'] ?>
+                                    </h4>
+                                    <p class="card-subtitle p-0 m-0 text-default">
+                                        <i class="fa fa-industry" aria-hidden="true"></i> <?= $value['empresa'] ?>
+                                    </p>
+                                    <h4 class="card-title p-0 m-0 text-info">
+                                        <?= $value['protocolo'] ?>
+                                    </h4>
+                                    <p class="card-subtitle p-0 m-0 text-muted d-flex justify-content-end">
+                                        <span class="d-flex flex-column text-cinza">
+                                            <?= Util::formatData($value['data_abertura']) . ' ' . Util::formatHora($value['data_abertura']) ?>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        <? endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <? endforeach; ?>
+</div>
+
+<script type="text/javascript">
+    function verTarefa(id_tarefa) {
+        carregarTela('../../tarefa/cadastro?id_tarefa=' + id_tarefa);
+    }
+
+    $(document).ready(function() {
+
+
+        if (!isMobile) {
+            $('#content').css({
+                'overflow-x': 'auto',
+                'overflow-y': 'hidden'
+            });
+            $('.colunas-estagios').css(
+                'max-height', $('#content').height() - 5
+            ).css(
+                'height', $('#content').height() - 5
+            );
+
+        }
+
+        $('#salvar-tarefa').on('click', function() {
+            alert($('#formulario').val());
+        });
+
+    });
+</script>

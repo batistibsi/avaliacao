@@ -1,0 +1,191 @@
+<div class="d-flex justify-content-center justify-content-md-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2 text-info">Consulta</h1>
+    <form id="form_consulta" class="form-inline text-right">
+        <div class="form-group">
+            <input style="min-width:240px; background:#fff" class="form-control text-center shadow" type="text" id="periodo" readonly>
+            <input type='hidden' id="inicio" value="<?= Util::formatData($this->inicio) ?>" />
+            <input type='hidden' id="fim" value="<?= Util::formatData($this->fim) ?>" />
+        </div>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped w-100" id="tabela_consulta">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="text-left">ABERTURA</th>
+                <th class="text-left">EMPRESA</th>
+                <th class="text-left">TIPO</th>
+                <th class="text-left">STATUS</th>
+                <th class="text-left">MOVIMENTO</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th class="pr-1"><input type="text" class="form-control" placeholder="Pesquisar" /></th>
+                <th class="pr-1"><input type="text" class="form-control" placeholder="Pesquisar" /></th>
+                <th class="pr-1"><input type="text" class="form-control" placeholder="Pesquisar" /></th>
+                <th class="pr-1"><input type="text" class="form-control" placeholder="Pesquisar" /></th>
+                <th class="pr-1"><input type="text" class="form-control" placeholder="Pesquisar" /></th>
+            </tr>
+        </thead>
+        <tbody id="corpo">
+            <? if ($this->registros && count($this->registros) > 0) foreach ($this->registros as $key => $value) : ?>
+                <tr>
+                    <td class="text-center" width="30px">
+                        <div class="btn-group">
+                            <a class="btn btn-primary" href="#" onclick="carregarTela('../../tarefa/cadastro?id_tarefa=<?= $value['id_tarefa_atual'] ?>')"><i class="fa fa-eye"></i></a>
+                        </div>
+                    </td>
+                    <td class="text-left align-middle"><?= Util::formatData($value['data_envio']) ?></td>
+                    <td class="text-left align-middle"><?= $value['empresa'] ?></td>
+                    <td class="text-left align-middle"><?= $value['nome_formulario'] ?></td>
+                    <td class="text-left align-middle"><?= $value['tipo_tarefa'] ?></td>
+                    <td class="text-left align-middle"><?= Util::formatData($value['data_movimento']) ?></td>
+                </tr>
+            <? endforeach; ?>
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        let periodo = $('#periodo').daterangepicker({
+            startDate: new Date('<?= $this->inicio ?> 00:00:00'),
+            endDate: new Date('<?= $this->fim ?> 23:59:59'),
+            ranges: {
+                'Hoje': [moment(), moment()],
+                'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                'Semana Atual': [moment().clone().startOf('isoWeek'), moment().clone().endOf('isoWeek')],
+                'Semana Passada': [moment().clone().subtract(1, 'weeks').startOf('isoWeek'), moment().clone().subtract(1, 'weeks').endOf('isoWeek')],
+                'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                'Mês Atual': [moment().startOf('month'), moment().endOf('month')],
+                'Mês Passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            "locale": {
+                format: 'DD/MM/YYYY',
+                "separator": " até ",
+                "applyLabel": "Aplicar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "De",
+                "toLabel": "Até",
+                "customRangeLabel": "Selecionar Data",
+                "daysOfWeek": [
+                    "Dom",
+                    "Seg",
+                    "Ter",
+                    "Qua",
+                    "Qui",
+                    "Sex",
+                    "Sáb"
+                ],
+                "monthNames": [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ],
+                "firstDay": 0
+            }
+        }, function(start, end) {
+            let inicio = start.format('YYYY-MM-DD');
+            let fim = end.format('YYYY-MM-DD');
+            carregarTela('../../consulta?inicio=' + inicio + '&fim=' + fim);
+        });
+
+        let tabela_consulta = $('#tabela_consulta').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json',
+                buttons: {
+                    copyTitle: 'Dados Copiados!',
+                    copySuccess: {
+                        _: '%d linhas copiadas para a área de transferência',
+                        1: '1 linha copiada para a área de transferência'
+                    }
+                }
+            },
+            search: false,
+            "columnDefs": [{
+                type: "date-br",
+                targets: [1, 5]
+            }],
+            "order": [
+                [1, 'asc']
+            ],
+            dom:
+  "<'row align-items-center mb-2'\
+     <'col-12 col-md-3'l>\
+     <'col-12 col-md-6 dt-buttons-center'B>\
+     <'col-12 col-md-3 text-md-right d-none d-md-block'f>>" +
+  "<'row'<'col-12'tr>>" +
+  "<'row align-items-center mt-2'<'col-12 col-md-5'i><'col-12 col-md-7'p>>",
+            buttons: [/*{
+                    extend: 'copy',
+                    titleAttr: 'Copiar',
+                    text: '<i class="fas fa-copy"></i>',
+                    className: 'text-info',
+                    exportOptions: {
+                        search: 'applied',
+                        columns: [1, 2, 3, 4, 5]
+                    }
+                },*/
+                {
+                    extend: 'excel',
+                    titleAttr: 'Excel',
+                    text: '<i class="fas fa-file-excel"></i>',
+                    className: 'text-info',
+                    filename: 'puvidoria',
+                    exportOptions: {
+                        search: 'applied',
+                        columns: [1, 2, 3, 4, 5]
+                    }
+                },
+                /*{
+                    extend: 'pdf',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    titleAttr: 'PDF',
+                    text: '<i class="fas fa-file-pdf"></i>',
+                    className: 'text-info',
+                    title: 'Relatório de Faturamento',
+                    filename: 'puvidoria',
+                    customize: function(doc) {
+                        doc.content.splice(0, 0, {
+                            margin: [0, 0, 0, 12],
+                            width: 100,
+                            alignment: 'center',
+                            image: logo_base_64
+                        });
+                    },
+                    exportOptions: {
+                        search: 'applied',
+                        columns: [1, 2, 3, 4, 5]
+                    }
+                }*/
+            ]
+        });
+
+        $('#tabela_consulta thead tr:eq(1) th').each(function(i) {
+            $('input', this).on('keyup change', function() {
+                if (tabela_consulta.column(i).search() !== this.value) {
+                    tabela_consulta.column(i).search(this.value).draw();
+                }
+            });
+        });
+
+    });
+</script>
