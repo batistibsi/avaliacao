@@ -209,15 +209,25 @@
  		$(function() {
  			let last_src = localStorage.getItem('last_src');
  			if (last_src) {
- 				carregarTela(last_src, localStorage.getItem('last_content'), localStorage.getItem('last_callback')); // reconstrói a tela em que ele estava
+ 				history.replaceState({
+ 					src: last_src,
+ 					content: localStorage.getItem('last_content'),
+ 					callback: localStorage.getItem('last_callback'),
+ 				}, '', '');
+ 				carregarTela(last_src, localStorage.getItem('last_content'), localStorage.getItem('last_callback'), localStorage.getItem('last_callback'), false); // reconstrói a tela em que ele estava
  			} else {
+ 				history.replaceState({
+ 					src: '../../dashboard',
+ 					content: '#content',
+ 					callback: null,
+ 				}, '', '');
  				carregarTela('../../dashboard', '#content', null, false);
  			}
  		});
 
  		$('.close-full-screen').hide();
 
-		if(!isMobile)
+ 		if (!isMobile)
  			$(".sidebar").toggleClass('active');
 
  		$("#content").on('mousemove', function() {
