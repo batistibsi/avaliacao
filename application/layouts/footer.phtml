@@ -154,6 +154,7 @@
  		let self = $(this);
  		removeAtiveLinks('.sidebar', '.principal-link');
  		self.addClass('active');
+ 		localStorage.setItem('last_menu', self.data('menu-item'));
  		carregarTela(self.data('src'));
  	});
 
@@ -208,6 +209,7 @@
 
  		$(function() {
  			let last_src = localStorage.getItem('last_src');
+ 			let last_menu = 'dashboard';
  			if (last_src) {
  				history.replaceState({
  					src: last_src,
@@ -215,6 +217,7 @@
  					callback: localStorage.getItem('last_callback'),
  				}, '', '');
  				carregarTela(last_src, localStorage.getItem('last_content'), localStorage.getItem('last_callback'), localStorage.getItem('last_callback'), false); // reconstrói a tela em que ele estava
+ 				last_menu = localStorage.getItem('last_menu');
  			} else {
  				history.replaceState({
  					src: '../../dashboard',
@@ -223,6 +226,7 @@
  				}, '', '');
  				carregarTela('../../dashboard', '#content', null, false);
  			}
+ 			$('[data-menu-item="' + last_menu + '"]').addClass('active');
  		});
 
  		$('.close-full-screen').hide();
