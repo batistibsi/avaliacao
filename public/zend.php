@@ -20,6 +20,6 @@ try {
 }
 Zend_Db_Table_Abstract::setDefaultAdapter($db);
 Zend_Registry::set('db', $db);
-Zend_Registry::set('leandro', "ES_da22bae2c8324073aab760744d867824");
+Zend_Registry::set('leandro', "");
 /*Inclui Zend*/
 
