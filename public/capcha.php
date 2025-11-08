@@ -4,13 +4,13 @@ if (empty($_REQUEST["h-captcha-response"])) {
 }
 
 $captchaResponse = $_REQUEST["h-captcha-response"]; // Resposta do usuário
-$key = Zend_Registry::get('leandro'); // Substitua pela sua chave secreta
+$secretKey = "ES_da22bae2c8324073aab760744d867824"; // Substitua pela sua chave secreta
 $remoteIp = $_SERVER["REMOTE_ADDR"]; // Captura o IP do cliente
 
 
 // Configurar os dados para enviar à API
 $data = [
-	"secret" => $key,
+	"secret" => $secretKey,
 	"response" => $captchaResponse,
 	"remoteip" => $remoteIp
 ];
