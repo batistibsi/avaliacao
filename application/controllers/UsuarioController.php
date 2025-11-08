@@ -36,7 +36,6 @@ class UsuarioController extends Zend_Controller_Action
 		$this->view->registro = $registro;
 
 		$this->view->comboPerfil = Usuario::comboPerfil();
-		$this->view->empresa = $registro ? Empresa::buscaId($registro['id_empresa']) : false;
 	}
 
 	// a remoção não é deletado, é apenas desativado o registro
@@ -80,24 +79,10 @@ class UsuarioController extends Zend_Controller_Action
 
 		$ativo = true;
 
-		$camposEmpresa = [];
-
-		$camposEmpresa['titulo'] = !empty($_REQUEST["titulo"]) ? $_REQUEST["titulo"] : null;
-		$camposEmpresa['logo'] = !empty($_REQUEST["logo"]) ? $_REQUEST["logo"] : '';
-		$camposEmpresa['cor'] = !empty($_REQUEST["cor"]) ? $_REQUEST["cor"] : '';
-
 		if (!$id_usuario) {
-			if (!$id_empresa = Empresa::criar($camposEmpresa)) {
-				die(Empresa::$erro);
-			}
 			$result = Usuario::insert($email, $nome, $idPerfil, $ativo, $senha, $confirmSenha, $id_empresa);
 		} else {
 			$result = Usuario::update($email, $nome, $idPerfil, $ativo, $senha, $id_usuario, $confirmSenha);
-			if ($result) {
-				if (!Empresa::salvar($id_empresa, $camposEmpresa)) {
-					die(Empresa::$erro);
-				}
-			}
 		}
 
 		if (!$result) echo Usuario::$erro;

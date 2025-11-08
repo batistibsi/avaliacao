@@ -1,7 +1,7 @@
 <?php
-require '/var/www/avaliacao/vendor/autoload.php';
+//require '/var/www/avaliacao/vendor/autoload.php';
 
-use PHPMailer\PHPMailer\PHPMailer;
+//use PHPMailer\PHPMailer\PHPMailer;
 
 class Email
 {
@@ -10,6 +10,8 @@ class Email
 
 	public static function enviar($destino, $titulo, $msg)
 	{
+		
+		return true;
 
 		$config = Config::busca();
 

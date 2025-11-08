@@ -42,8 +42,6 @@
 			</div>
 		</div>
 
-		<?php include('empresa.phtml');?>
-
 		<div class="row">
 			<div class="form-group col-12 text-right">
 				<button class="btn btn-success salvar"><span class="glyphicon glyphicon-floppy-disk"></span><i class="fa fa-floppy-o fa-lg"></i> Salvar</button>
@@ -54,19 +52,7 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		$('#nome').focus();
-
-		var PhoneMaskBehavior = function (val) {
-			return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
-		  },
-		  spOptions = {
-			onKeyPress: function(val, e, field, options) {
-				field.mask(PhoneMaskBehavior.apply({}, arguments), options);
-			  }
-		  };
-
-		  $('.phone').mask(PhoneMaskBehavior, spOptions);
-		
+		$('#nome').focus();		
 	});
 
 	$("#formulario").submit(function(e) {

@@ -89,7 +89,7 @@ class Usuario
 		return true;
 	}
 
-	public static function insert($email, $nome, $idPerfil, $ativo, $senha, $confirmSenha, $id_empresa)
+	public static function insert($email, $nome, $idPerfil, $ativo, $senha, $confirmSenha)
 	{
 
 		if ($ativo) {
@@ -134,7 +134,6 @@ class Usuario
 			"nome" => $nome,
 			"senha" => $senha,
 			"id_perfil" => $idPerfil,
-			"id_empresa" => $id_empresa,
 			"ativo" => $ativo
 		);
 
@@ -233,11 +232,8 @@ class Usuario
 		$db = Zend_Registry::get('db');
 
 		$select = "select avaliacao_usuario.*,
-					avaliacao_perfil.descricao as descricao_perfil,
-					e.titulo,
-					e.id_empresa
+					avaliacao_perfil.descricao as descricao_perfil
 				  from avaliacao_usuario
-				  inner join avaliacao_empresa e on e.id_empresa = avaliacao_usuario.id_empresa
 				  left join avaliacao_perfil on avaliacao_usuario.id_perfil = avaliacao_perfil.id_perfil
 				   where avaliacao_usuario.ativo and avaliacao_perfil.id_perfil in(" . $id_perfil . ") and avaliacao_usuario.id_usuario <> 1
 				  order by avaliacao_usuario.nome";
@@ -256,7 +252,7 @@ class Usuario
 					l.*
 				  from avaliacao_usuario a
 				  inner join avaliacao_login l on l.id_usuario = a.id_usuario
-				  -- where a.id_usuario <> 1
+				  where a.id_usuario <> 1
 				  order by a.nome";
 
 		$retorno = $db->fetchAll($select);

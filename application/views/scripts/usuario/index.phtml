@@ -16,8 +16,6 @@
 					<th></th>			
 					<th class="text-left">NOME</th>
 					<th class="text-left">PERFIL</th>
-					<th class="text-left">EMPRESA</th>
-					<th class="text-left">SITE</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -32,9 +30,7 @@
 							</div>
 						</td>	
 						<td class="text-left align-middle"><?=$value['nome']?></td>	
-						<td class="text-left align-middle"><?=$value['descricao_perfil']?></td>		
-						<td class="text-left align-middle"><?=$value['titulo']?></td>	
-						<td class="text-left align-middle"><a target="_blank" href="<?= Empresa::urlSite($value['id_empresa']) ?>"><i class="fa fa-eye"></i> Site</a></td>										
+						<td class="text-left align-middle"><?=$value['descricao_perfil']?></td>								
 					</tr>
 				<?endforeach; endif;?>
 				</tbody>
