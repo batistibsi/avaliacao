@@ -56,7 +56,7 @@
  	// Desativa autodescoberta para evitar que o Dropzone inicialize 2x
  	Dropzone.autoDiscover = false;
 
-	const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+ 	const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
  	function openFullscreen() {
  		let elem = document.documentElement;
@@ -88,7 +88,7 @@
  		}
  	}
 
- 	function carregarTela(src, content = '#content', callback = null) {
+ 	function carregarTela(src, content = '#content', callback = null, back = false) {
  		let conteiner = $(content);
  		$('html, body').animate({
  			scrollTop: 0
@@ -100,10 +100,24 @@
  		$.ajax({
  			type: "GET",
  			url: src,
+ 			data: {
+ 				ajax: true
+ 			},
  			success: function(data) {
+ 				if (!back && content == '#content') {
+ 					history.pushState({
+ 						src: src,
+ 						content: content,
+ 						callback: callback
+ 					}, '', '');
+
+ 					localStorage.setItem('last_src', src);
+ 					localStorage.setItem('last_content', content);
+ 					localStorage.setItem('last_callback', callback);
+ 				}
  				conteiner.html(data);
- 				if(isMobile)
-					$(".sidebar").addClass('active');
+ 				if (isMobile)
+ 					$(".sidebar").addClass('active');
  				if (callback)
  					callback();
 
@@ -115,6 +129,20 @@
  		});
 
  	}
+
+ 	// Inicial: grava o estado da página atual
+ 	//history.replaceState({ src: '../../dashboard' }, '', '');
+
+ 	// Botão Voltar/Avançar
+ 	window.addEventListener('popstate', function(event) {
+ 		if (event.state && event.state.src) {
+ 			// Volta para a tela AJAX correspondente
+ 			carregarTela(event.state.src, event.state.content, event.state.callback, true); // false = não empilhar de novo
+ 		} else {
+ 			console.log(event);
+ 			//carregarTela('../../index');
+ 		}
+ 	});
 
  	function removeAtiveLinks(bloco, item) {
  		$(bloco).find(item).each(function() {
@@ -178,12 +206,19 @@
 		  $('[data-toggle="tooltip"]').tooltip({html:true})
 		});*/
 
- 		carregarTela('../../dashboard');
-
+ 		$(function() {
+ 			let last_src = localStorage.getItem('last_src');
+ 			if (last_src) {
+ 				carregarTela(last_src, localStorage.getItem('last_content'), localStorage.getItem('last_callback')); // reconstrói a tela em que ele estava
+ 			} else {
+ 				carregarTela('../../dashboard', '#content', null, false);
+ 			}
+ 		});
 
  		$('.close-full-screen').hide();
 
- 		//$(".sidebar").addClass('active');
+		if(!isMobile)
+ 			$(".sidebar").toggleClass('active');
 
  		$("#content").on('mousemove', function() {
  			//$(".sidebar").addClass('active');

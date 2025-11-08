@@ -22,17 +22,11 @@
  </main>
 
 
-
  <script type="text/javascript">
      $(document).ready(function() {
 
          var inicio = '<?= $this->inicio ?>';
          var fim = '<?= $this->fim ?>';
-
-         $('#id_empresa').on('change', function() {
-             id_empresa = $(this).val();
-             carregarTela('../../dashboard?id_empresa=inicio=' + inicio + '&fim=' + fim);
-         });
 
          let periodo = $('#periodo').daterangepicker({
              startDate: new Date('<?= $this->inicio ?> 00:00:00'),
@@ -83,7 +77,7 @@
          }, function(start, end) {
              inicio = start.format('YYYY-MM-DD');
              fim = end.format('YYYY-MM-DD');
-             carregarTela('../../dashboard?id_empresa=' + id_empresa + '&inicio=' + inicio + '&fim=' + fim);
+             carregarTela('../../dashboard?inicio=' + inicio + '&fim=' + fim);
          });
 
      });

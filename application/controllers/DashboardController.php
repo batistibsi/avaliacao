@@ -1,5 +1,7 @@
 <?php
 
+//if(!isset($_GET['ajax'])) die('Não permitido');
+
 class DashboardController extends Zend_Controller_Action
 {
 
