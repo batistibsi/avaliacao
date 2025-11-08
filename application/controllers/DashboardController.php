@@ -1,6 +1,8 @@
 <?php
 
-//if(!isset($_GET['ajax'])) die('Não permitido');
+if(!isset($_GET['ajax'])){
+	Util::gotoIndex();
+}
 
 class DashboardController extends Zend_Controller_Action
 {

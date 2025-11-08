@@ -4,6 +4,11 @@ class Util
 
 	public static $erro;
 
+	public static function gotoIndex() {
+		echo "<script>window.location = '../../index'</script>";
+		exit();
+	}
+
 	public static $mes = array('', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez');
 
 	public static $mask = array('fisica' => '###.###.###-##', 'juridica' => '##.###.###/####-##');
