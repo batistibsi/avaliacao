@@ -4,7 +4,7 @@ if (empty($_REQUEST["h-captcha-response"])) {
 }
 
 $captchaResponse = $_REQUEST["h-captcha-response"]; // Resposta do usuário
-$secretKey = "ES_da22bae2c8324073aab760744d867824"; // Substitua pela sua chave secreta
+$secretKey = Zend_Registry::get('capcha_key'); // Substitua pela sua chave secreta
 $remoteIp = $_SERVER["REMOTE_ADDR"]; // Captura o IP do cliente
 
 

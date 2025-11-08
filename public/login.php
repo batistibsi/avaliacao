@@ -2,8 +2,9 @@
 session_start();
 ini_set('display_errors', 0);
 
-include_once "./capcha.php";
 include_once "./zend.php";
+include_once "./capcha.php";
+
 
 $erro = false;
 $message = "";
