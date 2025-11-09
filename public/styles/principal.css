@@ -53,6 +53,9 @@ a{
   color: var(--dt-primary)
 }
 
+a:hover{
+  color: var(--dt-active)  !important;
+}
 
 .text-primary{
   color: var(--dt-primary) !important;
