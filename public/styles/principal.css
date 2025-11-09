@@ -1,9 +1,11 @@
+
+
+
 body {
   font-size: 1.2rem;
   font-family: 'Montserrat' !important;
   overflow: hidden;
 }
-
 
 /* Side Bar */
 .wrapper {
@@ -37,42 +39,38 @@ body {
 
 .sidebar .nav-link {
   font-weight: 500;
-  color: #097f8c;
+  color: var(--dt-primary);
   margin-top: 10px;
 }
 
 .sidebar .nav-link .fa {
   font-size: 24px;
   margin-right: 4px;
-  color: #097f8c;
+  color: var(--dt-primary);
 }
 
 a{
-  color: #097f8c
+  color: var(--dt-primary)
 }
 
 
 .text-primary{
-  color: #097f8c !important;
+  color: var(--dt-primary) !important;
 }
 
 .text-info{
-  color: #07545d !important;
+  color: var(--dt-active)  !important;
 }
 
 .sidebar .nav-link.active {
-  color:  #07545d !important;
+  color:  var(--dt-active)  !important;
 }
 
 .btn-primary,.bg-info{
-  background-color: #097f8c !important;
-  border-color: #097f8c !important;
+  background-color: var(--dt-primary) !important;
+  border-color: var(--dt-primary) !important;
 }
 
-:root {
-  --dt-primary: #097f8c;
-  --dt-active:  #07545d;
-}
 .dataTables_wrapper .dataTables_paginate .pagination .page-link {
   color: var(--dt-primary); border-color: var(--dt-primary);
 }
@@ -172,7 +170,7 @@ a{
 
 
 .navbar-brand img{
-  width: 150px;
+  width: 226px;
   height: 43px;
 }
 
@@ -224,10 +222,10 @@ a{
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-thumb {
-  background: #097f8c;
+  background: #c02f5a;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #097f8c;
+  background: #c02f5a;
 }
