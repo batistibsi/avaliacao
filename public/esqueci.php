@@ -10,6 +10,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <style>
+        :root {
+            --dt-primary: #c02f5a;
+            --dt-active: color-mix(in srgb, var(--dt-primary) 80%, black 40%);
+        }
+    </style>
+
     <link rel="stylesheet" href="./styles/login.css">
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 </head>
@@ -108,7 +116,7 @@
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 <script>
     $(document).ready(function() {
         $("form").on('submit', function(e) {
