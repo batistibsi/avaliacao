@@ -88,7 +88,7 @@
  		}
  	}
 
- 	function carregarTela(src, content = '#content', callback = null, back = false) {
+ 	function carregarTela(src, content = '#content', back = false) {
  		let conteiner = $(content);
  		$('html, body').animate({
  			scrollTop: 0
@@ -107,13 +107,11 @@
  				if (!back && content == '#content') {
  					history.pushState({
  						src: src,
- 						content: content,
- 						callback: callback
+ 						content: content
  					}, '', '');
 
  					localStorage.setItem('last_src', src);
  					localStorage.setItem('last_content', content);
- 					localStorage.setItem('last_callback', callback);
  				}
  				conteiner.html(data);
  				if (isMobile)
@@ -137,7 +135,7 @@
  	window.addEventListener('popstate', function(event) {
  		if (event.state && event.state.src) {
  			// Volta para a tela AJAX correspondente
- 			carregarTela(event.state.src, event.state.content, event.state.callback, true); // false = não empilhar de novo
+ 			carregarTela(event.state.src, event.state.content, true); // false = não empilhar de novo
  		} else {
  			console.log(event);
  			//carregarTela('../../index');
@@ -213,18 +211,16 @@
  			if (last_src) {
  				history.replaceState({
  					src: last_src,
- 					content: localStorage.getItem('last_content'),
- 					callback: localStorage.getItem('last_callback'),
+ 					content: localStorage.getItem('last_content')
  				}, '', '');
- 				carregarTela(last_src, localStorage.getItem('last_content'), localStorage.getItem('last_callback'), localStorage.getItem('last_callback'), false); // reconstrói a tela em que ele estava
+ 				carregarTela(last_src, localStorage.getItem('last_content'), localStorage.getItem('last_callback'), false); // reconstrói a tela em que ele estava
  				last_menu = localStorage.getItem('last_menu');
  			} else {
  				history.replaceState({
  					src: '../../dashboard',
- 					content: '#content',
- 					callback: null,
+ 					content: '#content'
  				}, '', '');
- 				carregarTela('../../dashboard', '#content', null, false);
+ 				carregarTela('../../dashboard', '#content', false);
  			}
  			$('[data-menu-item="' + last_menu + '"]').addClass('active');
  		});

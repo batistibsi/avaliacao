@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+	<h1 class="h2">Grupos</h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+		<div class="btn-group mr-2">
+			<button type="button" onclick="carregarTela('../../grupo/cadastro')" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Novo grupo</button>
+		</div>
+	</div>
+</div>
+
+<div class="table-responsive">
+	<table id="table_grupo" class="table table-hover">
+		<thead>
+			<tr>
+				<th class="text-center" width="60px"></th>
+				<th class="text-left">NOME</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?
+			if (count($this->registros) > 0) : foreach ($this->registros as $key => $value) :
+			?>
+					<tr>
+						<td class="text-center" width="60px">
+							<div class="btn-group">
+								<a class="btn btn-primary" href="#" onclick="carregarTela('../../grupo/cadastro?id_grupo=<?= $value['id_grupo'] ?>')"><i class="fa fa-pencil-square-o"></i></a>
+								<a class="btn btn-info" href="#" onclick="remover('grupo',<?= $value['id_grupo'] ?>,'<?= $value['nome'] ?>')"><i class="fa fa-trash-o"></i></a>
+							</div>
+						</td>
+						<td class="text-left align-middle"><?= $value['nome'] ?></td>
+					</tr>
+			<? endforeach;
+			endif; ?>
+		</tbody>
+	</table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#table_grupo').DataTable({
+			language: {
+				url: 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
+			},
+			"columnDefs": [{
+				orderable: false,
+				targets: [0]
+			}],
+			"order": [
+				[1, 'asc']
+			]
+		});
+	});
+</script>
