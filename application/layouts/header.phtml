@@ -35,7 +35,7 @@
 
   <!-- Favicons -->
   <link rel="icon" href="../../favicon.ico">
-  
+
   <style>
     :root {
       --dt-primary: #c02f5a;
@@ -106,21 +106,21 @@
               Dashboard
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="principal-link nav-link" data-menu-item="kanban" data-src="../../kanban">
-              <i class="fa fa-clone" aria-hidden="true"></i>
-              Kanban
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="principal-link nav-link" data-menu-item="consulta" data-src="../../consulta">
-              <i class="fa fa-newspaper-o" aria-hidden="true"></i>
-              Consulta
-            </a>
-          </li>
         </ul>
         <ul class="nav flex-column mb-2">
           <? if ($this->permissao == 1): ?>
+            <li class="nav-item">
+              <a href="#" class="principal-link nav-link" data-menu-item="grupo" data-src="../../grupo">
+                <i class="fa fa-cogs" aria-hidden="true"></i>
+                Grupos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="principal-link nav-link" data-menu-item="formulario" data-src="../../formulario">
+                <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+                Formularios
+              </a>
+            </li>
             <li class="nav-item">
               <a href="#" class="principal-link nav-link" data-menu-item="usuario" data-src="../../usuario">
                 <i class="fa fa-user-circle-o" aria-hidden="true"></i>
@@ -128,12 +128,6 @@
               </a>
             </li>
           <? endif; ?>
-          <li class="nav-item">
-            <a href="#" class="principal-link nav-link" data-menu-item="grupo" data-src="../../grupo">
-              <i class="fa fa-cogs" aria-hidden="true"></i>
-              Grupos
-            </a>
-          </li>
         </ul>
       </div>
     </nav>

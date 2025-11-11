@@ -56,13 +56,12 @@ CREATE TABLE avaliacao_equipe_integrantes(
 );
 
 CREATE TABLE avaliacao_formulario (
-    id_formulario integer NOT NULL PRIMARY KEY,
-    descricao character varying,
-    cor character varying
+    id_formulario serial NOT NULL PRIMARY KEY,
+    nome character varying
 );
 
 CREATE TABLE avaliacao_envio (
-    id_envio integer NOT NULL PRIMARY KEY,
+    id_envio serial NOT NULL PRIMARY KEY,
     id_equipe integer,
     id_formulario integer,
     data_envio timestamp without time zone DEFAULT now(),
@@ -79,7 +78,7 @@ CREATE TABLE avaliacao_envio (
 );
 
 CREATE TABLE avaliacao_pergunta (
-    id_pergunta integer NOT NULL PRIMARY KEY,
+    id_pergunta serial NOT NULL PRIMARY KEY,
     id_formulario integer NOT NULL,
     pergunta text NOT NULL,
     tipo character varying NOT NULL,
@@ -94,7 +93,7 @@ CREATE TABLE avaliacao_pergunta (
 );
 
 CREATE TABLE avaliacao_resposta (
-    id_resposta integer NOT NULL PRIMARY KEY,
+    id_resposta serial NOT NULL PRIMARY KEY,
     id_envio integer,
     pergunta text NOT NULL,
     tipo character varying NOT NULL,

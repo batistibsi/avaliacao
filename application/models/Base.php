@@ -48,8 +48,7 @@ class Base
                 $db = Zend_Registry::get('db');
 
                 $data = array(
-                        "nome" => $nome,
-                        "id_usuario" => $campos['id_usuario']
+                        "nome" => $nome
                 );
 
                 $db->insert("avaliacao_base", $data);
@@ -74,8 +73,7 @@ class Base
                 $db = Zend_Registry::get('db');
 
                 $data = array(
-                        "nome" => $nome,
-                        "id_usuario" => $campos['id_usuario']
+                        "nome" => $nome
                 );
 
                 $db->update("avaliacao_base", $data, "id_base = " . $id_base);
