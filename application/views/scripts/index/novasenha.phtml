@@ -2,7 +2,7 @@
     <h1 class="h2 text-info">Alteração de Senha</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-            <button type="button" onclick="paginaInicial()" class="btn btn-danger"><i class="fa fa-close" aria-hidden="true"></i> Cancelar</button>
+            <button type="button" onclick="carregarTela('../../dashboard')" class="btn btn-danger"><i class="fa fa-close" aria-hidden="true"></i> Cancelar</button>
         </div>
     </div>
 </div>
@@ -30,7 +30,7 @@
 
     <div class="row">
         <div class="col-md-12 text-right">
-            <button class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span><i class="fa fa-floppy-o fa-lg"></i> Salvar</button>
+            <button class="btn btn-success"><i class="fa fa-floppy-o fa-lg"></i> Salvar</button>
         </div>
     </div>
 </form>
@@ -81,7 +81,7 @@
                         text: "Sua senha foi alterada com sucesso!",
                         type: "success"
                     }, function() {
-                        paginaInicial()
+                        carregarTela('../../dashboard')
                     });
                 }
             }
