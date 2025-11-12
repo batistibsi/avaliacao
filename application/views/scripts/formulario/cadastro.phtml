@@ -1,3 +1,66 @@
+<style>
+    .list-itens {
+        min-height: 60px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border: 1px dashed #ccc;
+        border-radius: 6px;
+    }
+
+    .condicao{
+        font-size: 10px;
+    }
+
+    .bloco {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 10px;
+        margin-right: 15px;
+        width: 550px;
+        min-height: 200px;
+        flex: 0 0 auto;
+        /* NÃO encolhe e mantém largura fixa */
+        margin-right: 15px;
+    }
+
+    .item {
+        background: #ffffff;
+        padding: 10px;
+        margin-bottom: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        cursor: move;
+    }
+
+    .container-flex {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .container-flex {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    /* MOBILE: stack os blocos */
+    @media (max-width: 768px) {
+        .container-flex {
+            flex-direction: column;
+            overflow-x: visible;
+        }
+
+        .bloco {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+    }
+</style>
+
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
 	<h1 class="h2">Formulário</h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
@@ -82,13 +145,16 @@
 <script type="text/javascript">
 	var blocoSelecionado = null;
 
-
 	function atualizarSortable() {
 		$(".sortable").sortable({
 			connectWith: ".sortable",
 			placeholder: "ui-state-highlight",
 			tolerance: "pointer",
-			revert: "true"
+			revert: "true",
+			animation: 100,
+			group: 'bloco-formulario',
+			sort: true,
+			chosenClass: 'active'
 		}).disableSelection();
 	}
 
@@ -274,6 +340,7 @@
 				const nomeBloco = $bloco.find('.bloco-titulo').text().trim();
 
 				$bloco.find('.item').each(function(iItem) {
+					const id = $(this).data('id-item');
 					const nomeItem = $(this).data('nome');
 
 					itens.push({

@@ -83,8 +83,6 @@
 		$('#disponiveis').sortable({
 			animation: 100,
 			group: 'list-1',
-			draggable: '.list-group-item',
-			handle: '.list-group-item',
 			sort: true,
 			//filter: '.sortable-disabled',
 			chosenClass: 'active',
@@ -95,7 +93,6 @@
 
 		$('#selecionados').sortable({
 			group: 'list-1',
-			handle: '.list-group-item',
 			onAdd: function(evt) {
 				$(evt.item).find('input').val('1');
 			}
