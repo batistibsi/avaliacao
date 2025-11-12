@@ -26,42 +26,41 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#nome').focus();
-	});
 
-	$("#formulario_formulario").submit(function(e) {
+		$("#formulario_formulario").submit(function(e) {
+			var erro = "";
 
-		var erro = "";
-
-		if (erro != "") {
-			swal({
-				title: "Atenção!",
-				text: erro,
-				type: "error"
-			});
-			return false;
-		}
-		$('.salvar').hide();
-		$.ajax({
-			type: "POST",
-			url: "../../formulario/salvar",
-			data: $("#formulario_formulario").serialize(),
-			success: function(data) {
-
-				// falha ao salvar
-				if (data.trim().length > 0) {
-					$('.salvar').show();
-					swal({
-						title: "Atenção!",
-						text: data,
-						type: "error"
-					});
-					// sucesso ao salvar
-				} else {
-					carregarTela('../../formulario');
-				}
+			if (erro != "") {
+				swal({
+					title: "Atenção!",
+					text: erro,
+					type: "error"
+				});
+				return false;
 			}
-		});
+			$('.salvar').hide();
+			$.ajax({
+				type: "POST",
+				url: "../../formulario/salvar",
+				data: $("#formulario_formulario").serialize(),
+				success: function(data) {
 
-		e.preventDefault();
+					// falha ao salvar
+					if (data.trim().length > 0) {
+						$('.salvar').show();
+						swal({
+							title: "Atenção!",
+							text: data,
+							type: "error"
+						});
+						// sucesso ao salvar
+					} else {
+						carregarTela('../../formulario');
+					}
+				}
+			});
+
+			e.preventDefault();
+		});
 	});
 </script>

@@ -17,6 +17,25 @@
 	</div>
 
 	<div class="row">
+		<div class="form-group col-md-6">
+			<span><label for="id_usuario">* Responsável: </label></span>
+			<select required class="form-control" name="id_usuario" id="id_usuario">
+				<? if (count($this->responsaveis)) foreach ($this->responsaveis as $key => $value) : ?>
+					<option value="<?= $value['id_usuario'] ?>"><?= $value['nome'] ?></option>
+				<? endforeach; ?>
+			</select>
+		</div>
+		<div class="form-group col-md-6">
+			<span><label for="id_formulario">* Formulario: </label></span>
+			<select required class="form-control" name="id_formulario" id="id_formulario">
+				<? if (count($this->formularios)) foreach ($this->formularios as $key => $value) : ?>
+					<option value="<?= $value['id_formulario'] ?>"><?= $value['nome'] ?></option>
+				<? endforeach; ?>
+			</select>
+		</div>
+	</div>
+
+	<div class="row">
 		<div class="form-group col-12 text-right">
 			<button class="btn btn-success salvar"><span class="glyphicon glyphicon-floppy-disk"></span><i class="fa fa-floppy-o"></i> Salvar</button>
 		</div>
@@ -26,42 +45,52 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#nome').focus();
-	});
 
-	$("#formulario_grupo").submit(function(e) {
+		$('#id_formulario').select2({
+			width: '100%',
+			language: "pt-BR",
+			theme: 'bootstrap4'
+		}).val(<?= ($this->registro && $this->registro['id_formulario']) ? $this->registro['id_formulario'] : '-1' ?>).trigger('change');
 
-		var erro = "";
+		$('#id_usuario').select2({
+			width: '100%',
+			language: "pt-BR",
+			theme: 'bootstrap4'
+		}).val(<?= ($this->registro && $this->registro['id_usuario']) ? $this->registro['id_usuario'] : '-1' ?>).trigger('change');
 
-		if (erro != "") {
-			swal({
-				title: "Atenção!",
-				text: erro,
-				type: "error"
-			});
-			return false;
-		}
-		$('.salvar').hide();
-		$.ajax({
-			type: "POST",
-			url: "../../grupo/salvar",
-			data: $("#formulario_grupo").serialize(),
-			success: function(data) {
-
-				// falha ao salvar
-				if (data.trim().length > 0) {
-					$('.salvar').show();
-					swal({
-						title: "Atenção!",
-						text: data,
-						type: "error"
-					});
-					// sucesso ao salvar
-				} else {
-					carregarTela('../../grupo');
-				}
+		$("#formulario_grupo").submit(function(e) {
+			var erro = "";
+			if (erro != "") {
+				swal({
+					title: "Atenção!",
+					text: erro,
+					type: "error"
+				});
+				return false;
 			}
-		});
+			$('.salvar').hide();
+			$.ajax({
+				type: "POST",
+				url: "../../grupo/salvar",
+				data: $("#formulario_grupo").serialize(),
+				success: function(data) {
 
-		e.preventDefault();
+					// falha ao salvar
+					if (data.trim().length > 0) {
+						$('.salvar').show();
+						swal({
+							title: "Atenção!",
+							text: data,
+							type: "error"
+						});
+						// sucesso ao salvar
+					} else {
+						carregarTela('../../grupo');
+					}
+				}
+			});
+
+			e.preventDefault();
+		});
 	});
 </script>

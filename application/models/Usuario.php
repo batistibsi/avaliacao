@@ -226,7 +226,7 @@ class Usuario
 		return true;
 	}
 
-	public static function lista($id_perfil = '1,2')
+	public static function lista($id_perfil = '1,2,3')
 	{
 
 		$db = Zend_Registry::get('db');
@@ -284,7 +284,7 @@ class Usuario
 	{
 		$db = Zend_Registry::get('db');
 
-		$select = "select * from avaliacao_perfil where id_perfil <= 2 order by id_perfil";
+		$select = "select * from avaliacao_perfil order by id_perfil";
 
 		$retorno = $db->fetchAll($select);
 

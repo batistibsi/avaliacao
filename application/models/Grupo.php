@@ -49,7 +49,8 @@ class Grupo
 
                 $data = array(
                         "nome" => $nome,
-                        "id_usuario" => $campos['id_usuario']
+                        "id_usuario" => $campos['id_usuario'],
+                        "id_formulario" => $campos['id_formulario']
                 );
 
                 $db->insert("avaliacao_grupo", $data);
@@ -59,7 +60,6 @@ class Grupo
 
         public static function update($id_grupo, $nome, $campos)
         {
-
                 if (strlen($nome) > 255 || strlen($nome) < 2) {
                         self::$erro = 'Nome inválido!';
                         return false;
@@ -70,12 +70,12 @@ class Grupo
                         return false;
                 }
 
-
                 $db = Zend_Registry::get('db');
 
                 $data = array(
                         "nome" => $nome,
-                        "id_usuario" => $campos['id_usuario']
+                        "id_usuario" => $campos['id_usuario'],
+                        "id_formulario" => $campos['id_formulario']
                 );
 
                 $db->update("avaliacao_grupo", $data, "id_grupo = " . $id_grupo);

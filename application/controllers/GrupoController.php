@@ -31,6 +31,11 @@ class GrupoController extends Zend_Controller_Action
 		$this->view->usuario = Zend_Registry::get('usuario');
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
+
+		$this->view->responsaveis = Usuario::lista('1,2');
+		$this->view->usuarios = Usuario::lista('3');
+
+		$this->view->formularios = Formulario::lista();
 	}
 
 	// a remoção não é deletado, é apenas desativado o registro
@@ -55,7 +60,8 @@ class GrupoController extends Zend_Controller_Action
 
 		$campos  = [];
 
-		$campos['id_usuario'] = !empty($_REQUEST["id_usuario"]) ? $_REQUEST["id_usuario"] : Zend_Registry::get('id_usuario');
+		$campos['id_usuario'] = !empty($_REQUEST["id_usuario"]) ? $_REQUEST["id_usuario"] : null;
+		$campos['id_formulario'] = !empty($_REQUEST["id_formulario"]) ? $_REQUEST["id_formulario"] : null;
 
 		if (!$id_grupo) {
 			$result = Grupo::insert($nome, $campos);
