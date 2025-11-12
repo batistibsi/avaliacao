@@ -33,7 +33,7 @@ class Grupo
         }
 
 
-        public static function insert($nome, $campos)
+        public static function insert($nome, $campos, $membros)
         {
                 if (strlen($nome) > 255 || strlen($nome) < 2) {
                         self::$erro = 'Nome inválido!';
@@ -55,10 +55,27 @@ class Grupo
 
                 $db->insert("avaliacao_grupo", $data);
 
+                $select = "select a.id_grupo from avaliacao_grupo a where a.nome = '" . $nome . "'";
+
+                $retorno = $db->fetchAll($select);
+
+                $id_grupo = $retorno[0]['id_grupo'];
+
+                if (count($membros)) {
+                        foreach ($membros as $value) {
+                                $db->delete('avaliacao_grupo_usuario', 'id_usuario=' . $value);
+                                $data = array(
+                                        "id_grupo" => $id_grupo,
+                                        "id_usuario" => $value
+                                );
+                                $db->insert("avaliacao_grupo_usuario", $data);
+                        }
+                }
+
                 return true;
         }
 
-        public static function update($id_grupo, $nome, $campos)
+        public static function update($id_grupo, $nome, $campos, $membros)
         {
                 if (strlen($nome) > 255 || strlen($nome) < 2) {
                         self::$erro = 'Nome inválido!';
@@ -80,6 +97,19 @@ class Grupo
 
                 $db->update("avaliacao_grupo", $data, "id_grupo = " . $id_grupo);
 
+                $db->delete('avaliacao_grupo_usuario', 'id_grupo=' . $id_grupo);
+
+                if (count($membros)) {
+                        foreach ($membros as $value) {
+                                $db->delete('avaliacao_grupo_usuario', 'id_usuario=' . $value);
+                                $data = array(
+                                        "id_grupo" => $id_grupo,
+                                        "id_usuario" => $value
+                                );
+                                $db->insert("avaliacao_grupo_usuario", $data);
+                        }
+                }
+
                 return true;
         }
 
@@ -100,5 +130,28 @@ class Grupo
                 $retorno = $db->fetchAll($select);
 
                 return $retorno;
+        }
+
+        public static function membros($id_grupo)
+        {
+                $db = Zend_Registry::get('db');
+
+                $select = "select a.*, b.nome
+                                from avaliacao_grupo_usuario a
+                                inner join avaliacao_usuario b on a.id_usuario = b.id_usuario 
+                                where a.id_grupo = " . $id_grupo . "
+                                order by b.nome";
+
+                $retorno = $db->fetchAll($select);
+
+                $arrAux = [];
+
+                if(count($retorno)){
+                        foreach($retorno as $value){
+                                $arrAux[$value['id_usuario']] = $value;
+                        }
+                }
+
+                return $arrAux;
         }
 }
