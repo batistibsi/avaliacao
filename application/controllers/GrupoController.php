@@ -36,6 +36,8 @@ class GrupoController extends Zend_Controller_Action
 		$this->view->usuarios = Usuario::lista('3');
 
 		$this->view->formularios = Formulario::lista();
+
+		$this->view->membros = [];
 	}
 
 	// a remoção não é deletado, é apenas desativado o registro

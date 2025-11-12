@@ -36,6 +36,40 @@
 	</div>
 
 	<div class="row">
+		<div class="col-md-6">
+			<div class="card border-0">
+				<div class="card-header bg-cinza">DISPONÍVEIS</div>
+				<ul style="min-height:100px;max-height:500px;overflow:auto" class="list-group card-body p-0" id="disponiveis">
+					<? if (count($this->usuarios) > 0)
+						foreach ($this->usuarios as $key => $value) :
+							if (isset($this->membros[$value['id_usuario']])) continue; ?>
+						<li class="list-group-item border" style="cursor:move">
+							<i class="fa fa-arrows pull-right"></i>
+							<strong><?= $value['nome'] ?></strong>
+							<input type="hidden" name="usuario_<?= $value['id_usuario'] ?>" value="" />
+						</li>
+					<? endforeach; ?>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card border-0">
+				<div class="card-header bg-danger text-white">SELECIONADOS</div>
+				<ul style="min-height:100px;max-height:500px;overflow:auto" class="list-group card-body p-0" id="selecionados">
+					<? if ($this->registro && count($this->membros))
+						foreach ($this->membros as $key => $value) : ?>
+						<li class="list-group-item border">
+							<i class="fa fa-arrows pull-right" style="cursor:move"></i>
+							<strong><?= $value['nome'] ?></strong>
+							<input type="hidden" name="usuario_<?= $value['id_usuario'] ?>" value="1" />
+						</li>
+					<? endforeach; ?>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
 		<div class="form-group col-12 text-right">
 			<button class="btn btn-success salvar"><span class="glyphicon glyphicon-floppy-disk"></span><i class="fa fa-floppy-o"></i> Salvar</button>
 		</div>
@@ -45,6 +79,27 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#nome').focus();
+
+		$('#disponiveis').sortable({
+			animation: 100,
+			group: 'list-1',
+			draggable: '.list-group-item',
+			handle: '.list-group-item',
+			sort: true,
+			//filter: '.sortable-disabled',
+			chosenClass: 'active',
+			onAdd: function(evt) {
+				$(evt.item).find('input').val('');
+			}
+		});
+
+		$('#selecionados').sortable({
+			group: 'list-1',
+			handle: '.list-group-item',
+			onAdd: function(evt) {
+				$(evt.item).find('input').val('1');
+			}
+		});
 
 		$('#id_formulario').select2({
 			width: '100%',
