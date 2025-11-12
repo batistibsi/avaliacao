@@ -16,6 +16,12 @@
 		</div>
 	</div>
 
+	<div class="d-flex justify-content-between mb-3">
+		<h4>Perguntas</h4>
+		<button type="button" id="addBloco" class="btn btn-success"><i class="fa fa-plus fa-lg"></i> Adicionar Grupo</button>
+	</div>
+	<div id="blocosContainer" class="container-flex"></div>
+
 	<div class="row">
 		<div class="form-group col-12 text-right">
 			<button class="btn btn-success salvar"><span class="glyphicon glyphicon-floppy-disk"></span><i class="fa fa-floppy-o"></i> Salvar</button>
@@ -23,11 +29,307 @@
 	</div>
 </form>
 
+<!-- Modal de Novo Item -->
+<div class="modal fade" id="modalNovoItem" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<form id="formNovoItem" class="modal-content">
+			<div class="modal-header text-white bg-danger">
+				<h5 class="modal-title">Pergunta</h5>
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="blocoDestino">
+				<div class="form-group">
+					<label for="itemNome">Pergunta: </label>
+					<input type="text" class="form-control" id="itemNome" required>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-success"><i class="fa fa-check fa-lg"></i> Aplicar</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-lg"></i> Cancelar</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Modal de Novo Bloco -->
+<div class="modal fade" id="modalNovoBloco" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<form id="formNovoBloco" class="modal-content">
+			<div class="modal-header text-white bg-danger">
+				<h5 class="modal-title">Novo Grupo</h5>
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="blocoEditando">
+				<div class="form-group">
+					<label for="nomeBloco">Nome do Grupo</label>
+					<input type="text" class="form-control" id="nomeBloco" required>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-success"><i class="fa fa-check fa-lg"></i> Aplicar</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-lg"></i> Cancelar</button>
+			</div>
+		</form>
+	</div>
+</div>
+
 <script type="text/javascript">
+	var blocoSelecionado = null;
+
+
+	function atualizarSortable() {
+		$(".sortable").sortable({
+			connectWith: ".sortable",
+			placeholder: "ui-state-highlight",
+			tolerance: "pointer",
+			revert: "true"
+		}).disableSelection();
+	}
+
+	function novoBloco(nome) {
+		const blocoHtml = $(`
+                    <div class="bloco card p-2 mr-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="bloco-titulo">${nome}</h5>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary btnEditarBloco" title="Editar título"><i class="fa fa-edit fa-lg"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger btnRemoverBloco" title="Remover bloco"><i class="fa fa-trash fa-lg"></i></button>
+                        </div>
+                        </div>
+                        <div class="list-itens sortable"></div>
+                        <button type="button" class="btn btn-sm btn-success mt-2 addItem"><i class="fa fa-plus fa-lg"></i> Nova Pergunta</button>
+                    </div>`);
+
+		$('#blocosContainer').append(blocoHtml);
+		atualizarSortable();
+
+		return blocoHtml;
+	}
+
+	var itenNumero = 0;
+
+	function novoItem(nome) {
+		//console.log(opcoes);
+		// Criando novo item
+		const itemHtml = $(`
+						<div class="item" data-id-item="${itenNumero}" data-nome="${nome}">
+							<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<strong class="item-nome">${nome}</strong><br>
+							</div>
+							<div class="ml-2">
+								<button type="button" class="btn btn-sm btn-outline-secondary btnEditarItem" title="Editar"><i class="fa fa-edit fa-lg"></i></button>
+								<button type="button" class="btn btn-sm btn-outline-danger btnRemoverItem" title="Remover"><i class="fa fa-trash fa-lg"></i></button>
+							</div>
+							</div>
+						</div>`);
+
+		blocoSelecionado.append(itemHtml);
+		atualizarSortable();
+		itenNumero++;
+	}
+
 	$(document).ready(function() {
 		$('#nome').focus();
 
+		let blocoEditando = null;
+		// Ao clicar em "Novo Bloco"
+		$('#addBloco').on('click', function() {
+			alert('sfsda');
+			blocoEditando = null;
+			$('#formNovoBloco')[0].reset();
+			$('#modalNovoBloco .modal-title').text('Novo Bloco');
+			$('#modalNovoBloco').modal('show');
+		});
+
+		// Submeter o modal de bloco (criar ou editar)
+		$('#formNovoBloco').submit(function(e) {
+			e.preventDefault();
+			const nome = $('#nomeBloco').val().trim();
+
+			if (!nome) return;
+
+			if (blocoEditando) {
+				blocoEditando.find('.bloco-titulo').text(nome);
+				blocoEditando = null;
+			} else {
+				novoBloco(nome);
+			}
+
+			$('#modalNovoBloco').modal('hide');
+		});
+
+		// Clique no botão para editar título
+		$('#blocosContainer').on('click', '.btnEditarBloco', function() {
+			blocoEditando = $(this).closest('.bloco');
+			const nomeAtual = blocoEditando.find('.bloco-titulo').text().trim();
+			$('#nomeBloco').val(nomeAtual);
+			$('#modalNovoBloco .modal-title').text('Editar Bloco');
+			$('#modalNovoBloco').modal('show');
+		});
+
+
+		// Clique no botão de remover bloco
+		$('#blocosContainer').on('click', '.btnRemoverBloco', function() {
+			const $bloco = $(this).closest('.bloco');
+			const nome = $bloco.find('.bloco-titulo').text().trim();
+
+			swal({
+					title: "Atenção!",
+					text: "Deseja remover o bloco " + nome + "?",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#4B8A08",
+					confirmButtonText: "Sim, quero remover!",
+					cancelButtonText: "Não!",
+					closeOnConfirm: true
+				},
+				function(isConfirm) {
+					if (isConfirm) {
+						$bloco.remove();
+					}
+				}
+			);
+		});
+
+
+		let itemSelecionado = null;
+
+		// Clique em Editar
+		$('#blocosContainer').on('click', '.btnEditarItem', function() {
+			const $item = $(this).closest('.item');
+			itemSelecionado = $item;
+
+			// Preenche o modal com os dados do item
+			$('#itemNome').val($item.data('nome'));
+
+			let idItem = $item.data('id-item');
+
+			$('#modalNovoItem').modal('show');
+		});
+
+		// Quando clicar em "+ Item", armazena o bloco e abre o modal
+		$('#blocosContainer').on('click', '.addItem', function() {
+			const $bloco = $(this).closest('.bloco').find('.list-itens');
+			blocoSelecionado = $bloco;
+			$('#modalNovoItem').modal('show');
+		});
+
+		// Clique em Remover
+		$('#blocosContainer').on('click', '.btnRemoverItem', function() {
+
+			var itemRemover = $(this).closest('.item');
+
+			swal({
+					title: "Atenção!",
+					text: "Deseja remover?",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#4B8A08",
+					confirmButtonText: "Sim, quero remover!",
+					cancelButtonText: "Não!",
+					closeOnConfirm: true
+				},
+				function(isConfirm) {
+					if (isConfirm) {
+						itemRemover.remove();
+					}
+				}
+			);
+		});
+
+		$('#formNovoItem').submit(function(e) {
+			e.preventDefault();
+
+			const nome = $('#itemNome').val().trim();
+
+			if (!nome) return;
+
+			if (itemSelecionado) {
+				// Editando item existente
+				itemSelecionado.data('nome', nome);
+
+				itemSelecionado.find('.item-nome').text(nome);
+
+				itemSelecionado = null;
+
+			} else if (blocoSelecionado) {
+				novoItem(nome);
+			}
+
+			$('#modalNovoItem').modal('hide');
+		});
+
+		$('#modalNovoItem').on('show.bs.modal', function() {
+			const itens = [];
+
+			$('#blocosContainer .bloco').each(function(iBloco) {
+				const $bloco = $(this);
+				const nomeBloco = $bloco.find('.bloco-titulo').text().trim();
+
+				$bloco.find('.item').each(function(iItem) {
+					const nomeItem = $(this).data('nome');
+
+					itens.push({
+						id: id,
+						bloco: nomeBloco,
+						nome: nomeItem
+					});
+				});
+			});
+
+			if (itens.length > 0) {
+				$('#itemProximo').empty();
+				$('#itemProximo').append(new Option('', ''));
+				itens.forEach(value => {
+					$('#itemProximo').append(new Option(value.bloco + ' - ' + value.nome, value.id));
+				});
+				$('#itemProximo').trigger('change');
+			}
+
+		});
+
+		$('#modalNovoItem').on('hidden.bs.modal', function() {
+			itemSelecionado = null;
+			blocoSelecionado = null;
+			$('#itemNome').val('');
+		});
+
+		<?php if ($this->registro): ?>
+			var itens = JSON.parse('<?= json_encode($this->blocos) ?>');
+
+			//console.log(itens);
+
+			if (itens.length > 0) {
+				let perguntas = [];
+				$.each(itens, function(index, bloco) {
+					if (bloco.itens.length > 0) {
+						$.each(bloco.itens, function(i, pergunta) {
+							perguntas.push(pergunta.id_pergunta);
+						});
+					}
+				});
+				$.each(itens, function(index, bloco) {
+					blocoSelecionado = novoBloco(bloco.nome).find('.list-itens');
+					if (bloco.itens.length > 0) {
+						$.each(bloco.itens, function(i, pergunta) {
+							novoItem(pergunta.pergunta)
+						});
+					}
+				});
+			}
+		<?php endif; ?>
+
 		$("#formulario_formulario").submit(function(e) {
+
+			e.preventDefault();
+
 			var erro = "";
 
 			if (erro != "") {
@@ -39,10 +341,41 @@
 				return false;
 			}
 			$('.salvar').hide();
+
+			const estrutura = [];
+
+			$('#blocosContainer .bloco').each(function(iBloco) {
+				const $bloco = $(this);
+				const nomeBloco = $bloco.find('.bloco-titulo').text().trim();
+
+				const itens = [];
+				$bloco.find('.item').each(function(iItem) {
+					const nomeItem = $(this).data('nome');
+
+					const id = $(this).data('id-item');
+
+					itens.push({
+						id: id,
+						bloco: nomeBloco,
+						nome: nomeItem
+					});
+				});
+
+				estrutura.push({
+					nome: nomeBloco,
+					ordem: iBloco,
+					itens: itens
+				});
+			});
+
 			$.ajax({
 				type: "POST",
 				url: "../../formulario/salvar",
-				data: $("#formulario_formulario").serialize(),
+				data: {
+					nome: $('#nome').val(),
+					id_formulario: $('#id_formulario').val(),
+					estrutura: JSON.stringify(estrutura)
+				},
 				success: function(data) {
 
 					// falha ao salvar
@@ -60,7 +393,6 @@
 				}
 			});
 
-			e.preventDefault();
 		});
 	});
 </script>
