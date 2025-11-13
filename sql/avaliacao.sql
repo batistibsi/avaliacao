@@ -85,7 +85,7 @@ CREATE TABLE avaliacao_bloco (
 	CONSTRAINT avaliacao_grupo_id_formulario_fkey FOREIGN KEY (id_formulario)
         REFERENCES avaliacao_formulario (id_formulario) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID
 );
 
@@ -100,12 +100,12 @@ CREATE TABLE avaliacao_pergunta (
 	CONSTRAINT avaliacao_pergunta_id_formulario_fkey FOREIGN KEY (id_formulario)
         REFERENCES avaliacao_formulario (id_formulario) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID,
 	CONSTRAINT avaliacao_pergunta_id_bloco_fkey FOREIGN KEY (id_bloco)
         REFERENCES avaliacao_bloco (id_bloco) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID
 );
 
