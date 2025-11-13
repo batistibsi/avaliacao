@@ -87,7 +87,7 @@ $blocos = [
     <div class="col-lg-10">
       <div class="card">
         <div class="card-body p-4 p-md-5">
-          <h4 class="mb-3">Avaliação (anônima)</h4>
+          <h4 class="mb-3">Avaliação</h4>
           <p class="muted mb-4">Cada pergunta possui as mesmas opções: rostos 1–10, comentário, anexos e áudio (todos opcionais, exceto a nota).</p>
 
           <form id="formAvaliacao" novalidate>
@@ -98,7 +98,7 @@ $blocos = [
                 $qid = htmlspecialchars($p['id'] ?? ('q'.$bIndex.'_'.$pIndex));
                 $texto = htmlspecialchars($p['texto']);
               ?>
-              <div class="question" data-qid="<?= $qid ?>">
+              <div class="question bg-light" data-qid="<?= $qid ?>">
                 <div class="d-flex align-items-center mb-2">
                   <span class="badge badge-secondary mr-2"><?= ($pIndex+1) ?></span>
                   <strong><?= $texto ?></strong>
