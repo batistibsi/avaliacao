@@ -55,12 +55,12 @@ class FormularioController extends Zend_Controller_Action
 
 		$campos  = [];
 
-		$campos['id_usuario'] = !empty($_REQUEST["id_usuario"]) ? $_REQUEST["id_usuario"] : Zend_Registry::get('id_usuario');
+		$estrutura = json_decode($_REQUEST["estrutura"]);
 
 		if (!$id_formulario) {
-			$result = Formulario::insert($nome, $campos);
+			$result = Formulario::insert($nome, $campos, $estrutura);
 		} else {
-			$result = Formulario::update($id_formulario, $nome, $campos);
+			$result = Formulario::update($id_formulario, $nome, $campos, $estrutura);
 		}
 		if (!$result) echo Formulario::$erro;
 	}

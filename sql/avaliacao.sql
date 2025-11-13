@@ -77,16 +77,33 @@ CREATE TABLE avaliacao_envio (
         NOT VALID
 );
 
+CREATE TABLE avaliacao_bloco (
+    id_bloco serial NOT NULL PRIMARY KEY,
+    id_formulario integer NOT NULL,
+    nome character varying NOT NULL,
+    ordem integer not null,
+	CONSTRAINT avaliacao_grupo_id_formulario_fkey FOREIGN KEY (id_formulario)
+        REFERENCES avaliacao_formulario (id_formulario) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
 CREATE TABLE avaliacao_pergunta (
     id_pergunta serial NOT NULL PRIMARY KEY,
     id_formulario integer NOT NULL,
     pergunta text NOT NULL,
     tipo character varying NOT NULL,
     opcoes text,
-    grupo character varying,
+    id_bloco integer,
     ordem integer,
 	CONSTRAINT avaliacao_pergunta_id_formulario_fkey FOREIGN KEY (id_formulario)
         REFERENCES avaliacao_formulario (id_formulario) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+	CONSTRAINT avaliacao_pergunta_id_bloco_fkey FOREIGN KEY (id_bloco)
+        REFERENCES avaliacao_bloco (id_bloco) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID

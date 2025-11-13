@@ -33,7 +33,44 @@ class Formulario
         }
 
 
-        public static function insert($nome, $campos)
+        private static function estrutura($id_formulario, $estrutura)
+        {
+
+                if (count($estrutura)) {
+                        $db = Zend_Registry::get('db');
+                        $ordem = 0;
+                        foreach ($estrutura as $bloco) {
+
+                                $query = "INSERT INTO avaliacao_bloco(nome, id_formulario, ordem)
+                        VALUES ('" . $bloco->nome . "'," . $id_formulario . ", " . $ordem . ")
+                    	RETURNING id_bloco;";
+
+                                $registros = $db->fetchAll($query);
+
+                                $id_bloco = $registros[0]['id_bloco'];
+
+                                if (count($bloco->itens)) {
+                                        foreach ($bloco->itens as $pergunta) {
+                                                $ordem++;
+                                                $query = "INSERT INTO avaliacao_pergunta(id_formulario, pergunta, id_bloco, ordem)
+									VALUES (" . $id_formulario . ",
+											'" . $pergunta->nome . "',
+                                                                                        " . $id_bloco . ",
+											" . $ordem . ") 
+									RETURNING id_pergunta;";
+
+                                                $registros = $db->fetchAll($query);
+
+                                                // $id_pergunta = $registros[0]['id_pergunta'];
+                                        }
+                                }
+                        }
+                }
+
+                return true;
+        }
+
+        public static function insert($nome, $campos, $estrutura)
         {
                 if (strlen($nome) > 255 || strlen($nome) < 2) {
                         self::$erro = 'Nome inválido!';
@@ -47,16 +84,18 @@ class Formulario
 
                 $db = Zend_Registry::get('db');
 
-                $data = array(
-                        "nome" => $nome
-                );
+                $query = "INSERT INTO avaliacao_formulario(nome)
+                        VALUES ('" . $nome . "')
+                    	RETURNING id_formulario;";
 
-                $db->insert("avaliacao_formulario", $data);
+                $registros = $db->fetchAll($query);
 
-                return true;
+                $id_formulario = $registros[0]['id_formulario'];
+
+                return self::estrutura($id_formulario, $estrutura);
         }
 
-        public static function update($id_formulario, $nome, $campos)
+        public static function update($id_formulario, $nome, $campos, $estrutura)
         {
 
                 if (strlen($nome) > 255 || strlen($nome) < 2) {
