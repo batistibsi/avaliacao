@@ -74,6 +74,11 @@ a:hover{
   border-color: var(--dt-primary) !important;
 }
 
+.btn-info{
+  background-color: var(--dt-active) !important;
+  border-color: var(--dt-active) !important;
+}
+
 .dataTables_wrapper .dataTables_paginate .pagination .page-link {
   color: var(--dt-primary); border-color: var(--dt-primary);
 }

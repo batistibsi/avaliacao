@@ -7,17 +7,13 @@
         border-radius: 6px;
     }
 
-    .condicao{
-        font-size: 10px;
-    }
-
     .bloco {
         background: #f8f9fa;
         border: 1px solid #dee2e6;
         border-radius: 6px;
         padding: 10px;
         margin-right: 15px;
-        width: 550px;
+        width: 100%;
         min-height: 200px;
         flex: 0 0 auto;
         /* NÃO encolhe e mantém largura fixa */
@@ -81,9 +77,9 @@
 
 	<div class="d-flex justify-content-between mb-3">
 		<h4>Perguntas</h4>
-		<button type="button" id="addBloco" class="btn btn-success"><i class="fa fa-plus fa-lg"></i> Adicionar Grupo</button>
+		<button type="button" id="addBloco" class="btn btn-info"><i class="fa fa-plus fa-lg"></i> Adicionar Bloco</button>
 	</div>
-	<div id="blocosContainer" class="container-flex"></div>
+	<div id="blocosContainer"></div>
 
 	<div class="row">
 		<div class="form-group col-12 text-right">
@@ -94,7 +90,7 @@
 
 <!-- Modal de Novo Item -->
 <div class="modal fade" id="modalNovoItem" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 		<form id="formNovoItem" class="modal-content">
 			<div class="modal-header text-white bg-danger">
 				<h5 class="modal-title">Pergunta</h5>
@@ -106,7 +102,7 @@
 				<input type="hidden" id="blocoDestino">
 				<div class="form-group">
 					<label for="itemNome">Pergunta: </label>
-					<input type="text" class="form-control" id="itemNome" required>
+					<textarea class="form-control" id="itemNome" required></textarea>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -160,16 +156,16 @@
 
 	function novoBloco(nome) {
 		const blocoHtml = $(`
-                    <div class="bloco card p-2 mr-3">
+                    <div class="bloco card p-2 mr-3 mb-2 bg-light">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="bloco-titulo">${nome}</h5>
+                        <h5 class="bloco-titulo text-secondary text-bold">${nome}</h5>
                         <div>
-                            <button type="button" class="btn btn-sm btn-outline-secondary btnEditarBloco" title="Editar título"><i class="fa fa-edit fa-lg"></i></button>
-                            <button type="button" class="btn btn-sm btn-outline-danger btnRemoverBloco" title="Remover bloco"><i class="fa fa-trash fa-lg"></i></button>
+                            <button type="button" class="btn btn-sm text-secondary btnEditarBloco" title="Editar título"><i class="fa fa-edit fa-lg"></i></button>
+                            <button type="button" class="btn btn-sm btn-danger btnRemoverBloco" title="Remover bloco"><i class="fa fa-trash fa-lg"></i></button>
                         </div>
                         </div>
                         <div class="list-itens sortable"></div>
-                        <button type="button" class="btn btn-sm btn-success mt-2 addItem"><i class="fa fa-plus fa-lg"></i> Nova Pergunta</button>
+                        <button type="button" class="btn btn-sm btn-info mt-2 addItem"><i class="fa fa-plus fa-lg"></i> Nova Pergunta</button>
                     </div>`);
 
 		$('#blocosContainer').append(blocoHtml);
@@ -187,11 +183,11 @@
 						<div class="item" data-id-item="${itenNumero}" data-nome="${nome}">
 							<div class="d-flex justify-content-between align-items-center">
 							<div>
-								<strong class="item-nome">${nome}</strong><br>
+								<p class="item-nome lead">${nome}</p>
 							</div>
 							<div class="ml-2">
-								<button type="button" class="btn btn-sm btn-outline-secondary btnEditarItem" title="Editar"><i class="fa fa-edit fa-lg"></i></button>
-								<button type="button" class="btn btn-sm btn-outline-danger btnRemoverItem" title="Remover"><i class="fa fa-trash fa-lg"></i></button>
+								<button type="button" class="btn btn-sm btnEditarItem text-secondary" title="Editar"><i class="fa fa-edit fa-lg"></i></button>
+								<button type="button" class="btn btn-sm btn-danger btnRemoverItem" title="Remover"><i class="fa fa-trash fa-lg"></i></button>
 							</div>
 							</div>
 						</div>`);
@@ -207,7 +203,6 @@
 		let blocoEditando = null;
 		// Ao clicar em "Novo Bloco"
 		$('#addBloco').on('click', function() {
-			alert('sfsda');
 			blocoEditando = null;
 			$('#formNovoBloco')[0].reset();
 			$('#modalNovoBloco .modal-title').text('Novo Bloco');
