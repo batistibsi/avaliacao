@@ -20,6 +20,11 @@ class FormularioController extends Zend_Controller_Action
 
 	public function cadastroAction()
 	{
+		// Passando o usuário logado para a view
+		$this->view->usuario = Zend_Registry::get('usuario');
+		$this->view->idUsuario = Zend_Registry::get('id_usuario');
+		$this->view->permissao = Zend_Registry::get('permissao');
+
 		$this->view->header = "header.phtml";
 		$this->view->footer = "footer.phtml";
 
@@ -27,10 +32,9 @@ class FormularioController extends Zend_Controller_Action
 
 		$this->view->registro = $id_formulario ? Formulario::buscaId($id_formulario) : false;
 
-		// Passando o usuário logado para a view
-		$this->view->usuario = Zend_Registry::get('usuario');
-		$this->view->idUsuario = Zend_Registry::get('id_usuario');
-		$this->view->permissao = Zend_Registry::get('permissao');
+		if($id_formulario){
+			$this->view->blocos = Formulario::buscarBlocos($id_formulario);
+		}
 	}
 
 	// a remoção não é deletado, é apenas desativado o registro

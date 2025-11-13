@@ -122,7 +122,7 @@ CREATE TABLE avaliacao_resposta (
 	CONSTRAINT avaliacao_resposta_id_formulario_fkey FOREIGN KEY (id_envio)
         REFERENCES avaliacao_envio (id_envio) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID
 );
 

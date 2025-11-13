@@ -19,6 +19,30 @@ class Formulario
                 return false;
         }
 
+        public static function buscarBlocos($id_formulario)
+        {
+                $db = Zend_Registry::get('db');
+
+                $select = "select * from avaliacao_bloco where id_formulario = " . $id_formulario . " order by ordem ";
+
+                $registros = $db->fetchAll($select);
+
+                if (count($registros) > 0) {
+                        foreach ($registros as $key => $value) {
+
+                                $s = "select a.*
+                                        from avaliacao_pergunta a
+                                        where a.id_bloco = " . $value['id_bloco'] . " order by a.ordem ";
+
+                                $r = $db->fetchAll($s);
+
+                                $registros[$key]['itens'] = $r;
+                        }
+                }
+
+                return $registros;
+        }
+
         public static function uniqueNome($id_formulario, $nome)
         {
                 $db = Zend_Registry::get('db');
@@ -35,7 +59,6 @@ class Formulario
 
         private static function estrutura($id_formulario, $estrutura)
         {
-
                 if (count($estrutura)) {
                         $db = Zend_Registry::get('db');
                         $ordem = 0;
@@ -83,6 +106,7 @@ class Formulario
                 }
 
                 $db = Zend_Registry::get('db');
+                $db->beginTransaction();
 
                 $query = "INSERT INTO avaliacao_formulario(nome)
                         VALUES ('" . $nome . "')
@@ -92,7 +116,14 @@ class Formulario
 
                 $id_formulario = $registros[0]['id_formulario'];
 
-                return self::estrutura($id_formulario, $estrutura);
+                if(!self::estrutura($id_formulario, $estrutura)){
+                        $db->rollback();
+                        return false;
+                }
+
+                $db->commit();
+
+                return true;
         }
 
         public static function update($id_formulario, $nome, $campos, $estrutura)
@@ -108,14 +139,23 @@ class Formulario
                         return false;
                 }
 
-
                 $db = Zend_Registry::get('db');
+                $db->beginTransaction();
 
                 $data = array(
                         "nome" => $nome
                 );
 
                 $db->update("avaliacao_formulario", $data, "id_formulario = " . $id_formulario);
+
+                $db->delete("avaliacao_bloco","id_formulario=" . $id_formulario);
+
+                if(!self::estrutura($id_formulario, $estrutura)){
+                        $db->rollback();
+                        return false;
+                }
+
+                $db->commit();
 
                 return true;
         }
