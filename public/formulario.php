@@ -52,10 +52,6 @@ $blocos = [
     .progress{ height:.6rem; border-radius:999px; background:#e5e7eb; }
     .progress-bar{ transition:width .25s ease; }
 
-    /* Botões */
-    .btn-brand{ background:linear-gradient(135deg,#60a5fa,#34d399); color:#0b1220; border:0; border-radius:.8rem; font-weight:700; padding:.55rem 1.1rem; transition:transform .12s ease, box-shadow .12s ease; }
-    .btn-brand:hover{ transform:translateY(-1px); box-shadow:0 10px 18px rgba(0,0,0,.12); }
-
     /* Uploader */
     .uploader{ border:2px dashed #cbd5e1; background:#fff; border-radius:.8rem; padding:1rem; transition: border-color .15s ease, background .15s ease; }
     .uploader.dragover{ border-color:#60a5fa; background:#eef6ff; }
@@ -171,7 +167,7 @@ $blocos = [
             <?php endforeach; ?>
 
             <div class="d-flex align-items-center mt-3">
-              <button type="submit" class="btn btn-brand">Enviar avaliação</button>
+              <button type="submit" class="btn btn-primary">Enviar avaliação</button>
               <button type="button" id="limpar" class="btn btn-outline-secondary ml-3">Limpar</button>
               <small class="muted ml-auto">Atalho: ← → para mudar rostos</small>
             </div>
