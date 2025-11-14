@@ -12,7 +12,7 @@ class AvaliacaoController extends Zend_Controller_Action
 
 		$id_grupo = Zend_Registry::get('permissao') > 1 ? Grupo::gerente(Zend_Registry::get('id_usuario')) : 0;
 
-		if(Zend_Registry::get('permissao') > 1 && !$id_grupo){
+		if (Zend_Registry::get('permissao') > 1 && !$id_grupo) {
 			die('Gerente sem grupo definido');
 		}
 
@@ -21,41 +21,71 @@ class AvaliacaoController extends Zend_Controller_Action
 		$this->view->id_grupo = $id_grupo;
 	}
 
-	public function membrosAction() {
+	public function membrosAction()
+	{
 		// Passando o usuário logado para a view
 		$this->view->usuario = Zend_Registry::get('usuario');
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		if(Zend_Registry::get('permissao') > 1){
+		if (Zend_Registry::get('permissao') > 1) {
 			$id_grupo = Grupo::gerente(Zend_Registry::get('id_usuario'));
-		}else{
+		} else {
 			$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
 		}
 
-		if(!$id_grupo){
+		if (!$id_grupo) {
 			die('Grupo indefinido');
 		}
 
 		$this->view->membros = Grupo::membros($id_grupo);
-
 	}
 
-	public function formularioAction() {
+	public function formularioAction()
+	{
 		// Passando o usuário logado para a view
 		$this->view->usuario = Zend_Registry::get('usuario');
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
+		$id_usuario = isset($_REQUEST["id_usuario"]) ? (int)  $_REQUEST["id_usuario"] : 0;
+
+		if (!$id_usuario) {
+			die('Usuário indefinido');
+		}
+
+		$usuario = Usuario::buscaId($id_usuario);
+
+		if (!$usuario) {
+			die('Usuário não encontrado');
+		}
+
+		$this->view->usuario = $usuario;
+
+		$grupo = Grupo::membro($id_usuario);
+
+		if (!$grupo) {
+			die('Grupo não encontrado');
+		}
+
+		$this->view->grupo = $grupo;
+
+		$formulario = Formulario::buscaId($grupo['id_formulario']);
+
+		if (!$formulario) {
+			die('Formulário não encontrado');
+		}
+
+		$this->view->formulario = $formulario;
 		
-
+		$this->view->blocos = Formulario::buscarBlocos($grupo['id_formulario']);
 	}
 
-	public function historicoAction() {
+	public function historicoAction()
+	{
 		// Passando o usuário logado para a view
 		$this->view->usuario = Zend_Registry::get('usuario');
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
-
 	}
 }

@@ -1,21 +1,5 @@
 <?php
-// ====== EXEMPLO de entrada (substitua pelo seu) ======
-$blocos = [
-  [
-    'titulo' => 'Atendimento',
-    'perguntas' => [
-      ['id' => 'q1', 'texto' => 'Como você avalia o atendimento?'],
-      ['id' => 'q2', 'texto' => 'Agilidade do suporte?'],
-    ],
-  ],
-  [
-    'titulo' => 'Produto',
-    'perguntas' => [
-      ['id' => 'q3', 'texto' => 'Qualidade do produto?'],
-      ['id' => 'q4', 'texto' => 'Custo-benefício?'],
-    ],
-  ],
-];
+
 ?>
 
 <style>
@@ -233,7 +217,7 @@ $blocos = [
     transform: rotate(90deg);
   }
 
-  /* Layout perguntas */
+  /* Layout itens */
   .question {
     padding: 1rem;
     border: 1px dashed #e5e7eb;
@@ -247,30 +231,30 @@ $blocos = [
   }
 </style>
 
-<div class="container py-5">
+<div class="container py-2">
   <div class="row justify-content-center">
     <div class="col-lg-10">
       <div class="card">
         <div class="card-body p-4 p-md-5">
-          <h4 class="mb-3">Avaliação</h4>
-          <p class="muted mb-4">Cada pergunta possui as mesmas opções: rostos 1–10, comentário, anexos e áudio (todos opcionais, exceto a nota).</p>
+          <h2 class="mb-3 text-primary"><?=$this->formulario['nome']?> - <?=$this->usuario['nome']?></h2>
+          <p class="muted mb-4"></p>
 
           <form id="formAvaliacao" novalidate>
-            <?php foreach ($blocos as $bIndex => $bloco): ?>
-              <h5 class="block-title"><?= htmlspecialchars($bloco['titulo']) ?></h5>
+            <?php foreach ($this->blocos as $bIndex => $bloco): ?>
+              <h3 class="block-title text-info"><?= htmlspecialchars($bloco['nome']) ?></h3>
 
-              <?php foreach ($bloco['perguntas'] as $pIndex => $p):
+              <?php foreach ($bloco['itens'] as $pIndex => $p):
                 $qid = htmlspecialchars($p['id'] ?? ('q' . $bIndex . '_' . $pIndex));
-                $texto = htmlspecialchars($p['texto']);
+                $pergunta = htmlspecialchars($p['pergunta']);
               ?>
                 <div class="question bg-light" data-qid="<?= $qid ?>">
                   <div class="d-flex align-items-center mb-2">
                     <span class="badge badge-secondary mr-2"><?= ($pIndex + 1) ?></span>
-                    <strong><?= $texto ?></strong>
+                    <strong><?= $pergunta ?></strong>
                   </div>
 
                   <!-- Rostos 1..10 -->
-                  <div class="faces-group" role="radiogroup" aria-label="Avaliação 1 a 10" data-qid="<?= $qid ?>"></div>
+                  <div class="faces-group d-flex justify-content-between" role="radiogroup" aria-label="Avaliação 1 a 10" data-qid="<?= $qid ?>"></div>
 
                   <div class="d-flex align-items-center mt-2">
                     <div class="flex-grow-1">
@@ -278,18 +262,19 @@ $blocos = [
                         <div class="progress-bar" style="width:0%" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                     </div>
-                    <div class="ml-3"><span class="badge-score" data-role="badge">–</span></div>
+                    <div class="ml-3"><span class="badge-score" data-role="badge">SN</span></div>
                   </div>
 
-                  <div class="d-flex justify-content-between mt-2">
-                    <small class="muted">Muito ruim</small><small class="muted">Excelente</small>
+                  <div class="d-none justify-content-between mt-2">
+                    <small class="muted">Péssimo</small><small class="muted">Normal</small><small class="muted">Ótimo</small>
                   </div>
+                  
                   <div class="text-danger mt-1 d-none" data-role="erro-nota">Selecione uma nota (1 a 10).</div>
 
                   <!-- Toggle Collapse -->
                   <div class="mt-2">
-                    <button class="btn btn-link collapse-toggle p-0" type="button" data-toggle="collapse" data-target="#extras-<?= $qid ?>" aria-expanded="false" aria-controls="extras-<?= $qid ?>">
-                      <span class="arrow">▸</span> Adicionar detalhes (opcional)
+                    <button class="btn collapse-toggle p-0 text-info" type="button" data-toggle="collapse" data-target="#extras-<?= $qid ?>" aria-expanded="false" aria-controls="extras-<?= $qid ?>">
+                      <span class="arrow">▸</span> Observações
                     </button>
                   </div>
 
@@ -298,7 +283,7 @@ $blocos = [
                     <!-- Comentário -->
                     <div class="form-group mb-3">
                       <label for="comentario-<?= $qid ?>">Comentário</label>
-                      <textarea id="comentario-<?= $qid ?>" class="form-control" rows="3" name="perguntas[<?= $qid ?>][comentario]" placeholder="O que motivou essa avaliação?"></textarea>
+                      <textarea id="comentario-<?= $qid ?>" class="form-control" rows="3" name="itens[<?= $qid ?>][comentario]" placeholder="O que motivou essa avaliação?"></textarea>
                       <small class="form-text text-muted">Máx. 500 caracteres.</small>
                     </div>
 
@@ -337,10 +322,8 @@ $blocos = [
               <?php endforeach; ?>
             <?php endforeach; ?>
 
-            <div class="d-flex align-items-center mt-3">
-              <button type="submit" class="btn btn-primary">Enviar avaliação</button>
-              <button type="button" id="limpar" class="btn btn-outline-secondary ml-3">Limpar</button>
-              <small class="muted ml-auto">Atalho: ← → para mudar rostos</small>
+            <div class="text-right mt-3">
+              <button type="submit" class="btn btn-primary"><i class="fa fa-send"></i> Enviar</button>
             </div>
           </form>
 
@@ -352,7 +335,6 @@ $blocos = [
 
         </div>
       </div>
-      <p class="text-center mt-3 mb-0 muted">Anônimo</p>
     </div>
   </div>
 </div>
@@ -410,7 +392,7 @@ $blocos = [
         var id = qid + '-nota' + i;
         $fg.append(
           '<div class="face-item">' +
-          '<input type="radio" name="perguntas[' + qid + '][nota]" id="' + id + '" value="' + i + '">' +
+          '<input type="radio" name="itens[' + qid + '][nota]" id="' + id + '" value="' + i + '">' +
           '<label for="' + id + '" title="' + i + ' de 10" aria-label="' + i + ' de 10" data-val="' + i + '">' +
           (["😡", "😠", "😦", "😕", "😐", "🙂", "😊", "😃", "😄", "🤩"][i - 1]) +
           '</label>' +
@@ -636,47 +618,6 @@ $blocos = [
       $rec.find('[data-action=rec]').removeClass('recording');
     });
 
-    /* ====== Limpar ====== */
-    $('#limpar').on('click', function() {
-      // notas
-      $('#formAvaliacao input[type=radio]').prop('checked', false);
-      $('.progress-bar').css('width', '0%');
-      $('[data-role=badge]').text('–');
-      $('.face-item label').css('background', '#fff');
-      $('[data-role=erro-nota]').addClass('d-none');
-
-      // comentário
-      $('textarea').val('');
-
-      // arquivos
-      filesQueues = {};
-      $('[data-role=file-list]').empty();
-      $('[data-role=erro-arquivos]').addClass('d-none').text('');
-
-      // áudio
-      Object.keys(audioStates).forEach(function(qid) {
-        var st = audioStates[qid];
-        if (st.rec && st.rec.state === 'recording') {
-          st.rec.stop();
-          st.rec.stream.getTracks().forEach(t => t.stop());
-        }
-        if (st.url) {
-          URL.revokeObjectURL(st.url);
-        }
-      });
-      audioStates = {};
-      $('[data-role=audio]').addClass('d-none').removeAttr('src');
-      $('[data-action=redo]').addClass('d-none');
-      $('[data-role=rec-status]').text('Aguardando…');
-      $('[data-role=rec-timer]').text('00:00');
-      $('[data-action=rec]').removeClass('recording');
-
-      // fecha todos os extras
-      $('.collapse').collapse('hide');
-
-      $('#resultado').addClass('d-none');
-    });
-
     /* ====== Submit ====== */
     $('#formAvaliacao').on('submit', function(e) {
       e.preventDefault();
@@ -710,18 +651,18 @@ $blocos = [
           qid = $q.data('qid');
         var nota = $q.find('input[type=radio]:checked').val();
         var comentario = ($q.find('textarea').val() || '').trim().slice(0, 500);
-        fd.append('perguntas[' + qid + '][nota]', parseInt(nota, 10));
-        fd.append('perguntas[' + qid + '][comentario]', comentario);
+        fd.append('itens[' + qid + '][nota]', parseInt(nota, 10));
+        fd.append('itens[' + qid + '][comentario]', comentario);
 
         // arquivos
         (filesQueues[qid] || []).forEach(function(file) {
-          fd.append('perguntas[' + qid + '][anexos][]', file, file.name);
+          fd.append('itens[' + qid + '][anexos][]', file, file.name);
         });
 
         // áudio
         var st = audioStates[qid];
         if (st && st.blob) {
-          fd.append('perguntas[' + qid + '][audio]', st.blob, 'audio-' + qid + '.webm');
+          fd.append('itens[' + qid + '][audio]', st.blob, 'audio-' + qid + '.webm');
         }
       });
 

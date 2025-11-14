@@ -35,6 +35,22 @@ class Grupo
                 return false;
         }
 
+        public static function membro($id_usuario)
+        {
+                $db = Zend_Registry::get('db');
+
+                $select = "select a.id_grupo from avaliacao_grupo_usuario a where a.id_usuario = " . $id_usuario;
+
+                $registros = $db->fetchAll($select);
+
+                if (count($registros)) {
+                        return self::buscaId($registros[0]['id_grupo']);
+                }
+
+                self::$erro = "Registro não encontrado!";
+                return false;
+        }
+
         public static function uniqueNome($id_grupo, $nome)
         {
                 $db = Zend_Registry::get('db');
