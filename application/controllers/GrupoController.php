@@ -56,7 +56,7 @@ class GrupoController extends Zend_Controller_Action
 	{
 		$this->_helper->viewRenderer->setNoRender();
 
-		$id_grupo = (int) isset($_REQUEST["id_grupo"]) ? $_REQUEST["id_grupo"] : 0;
+		$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
 
 		$nome = !empty($_REQUEST["nome"]) ? $_REQUEST["nome"] : null;
 

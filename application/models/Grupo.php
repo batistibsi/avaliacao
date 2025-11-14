@@ -19,6 +19,22 @@ class Grupo
                 return false;
         }
 
+        public static function gerente($id_usuario)
+        {
+                $db = Zend_Registry::get('db');
+
+                $select = "select a.id_grupo from avaliacao_grupo a where a.id_usuario = " . $id_usuario;
+
+                $registros = $db->fetchAll($select);
+
+                if (count($registros)) {
+                        return $registros[0]['id_grupo'];
+                }
+
+                self::$erro = "Registro não encontrado!";
+                return false;
+        }
+
         public static function uniqueNome($id_grupo, $nome)
         {
                 $db = Zend_Registry::get('db');
@@ -136,7 +152,7 @@ class Grupo
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select a.*, b.nome
+                $select = "select a.*, b.nome, b.email
                                 from avaliacao_grupo_usuario a
                                 inner join avaliacao_usuario b on a.id_usuario = b.id_usuario 
                                 where a.id_grupo = " . $id_grupo . "
@@ -146,8 +162,8 @@ class Grupo
 
                 $arrAux = [];
 
-                if(count($retorno)){
-                        foreach($retorno as $value){
+                if (count($retorno)) {
+                        foreach ($retorno as $value) {
                                 $arrAux[$value['id_usuario']] = $value;
                         }
                 }
