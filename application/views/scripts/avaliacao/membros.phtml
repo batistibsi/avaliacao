@@ -73,8 +73,8 @@
 
 <div class="row" id="listaUsuarios">
     <?php if (count($this->membros)) foreach ($this->membros as $key => $value): ?>
-        <div class="col-md-6 col-lg-4 mb-4" data-nome="Ana Silva" data-email="ana.silva@empresa.com" data-cargo="Analista de Suporte">
-            <div class="card user-card h-100">
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card user-card h-100" data-id_usuario="<?= $value['id_usuario'] ?>">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="mr-3">
@@ -102,9 +102,9 @@
                 </div>
                 <div class="card-footer bg-white border-0 pt-0 pb-3 px-4">
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-user mr-1"></i> Historico</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="historico"><i class="fas fa-user mr-1"></i> Historico</button>
                         <div>
-                            <button class="btn btn-sm btn-primary"><i class="fas fa-smile-o"></i> Avaliar</button>
+                            <button type="button" class="btn btn-sm btn-primary" id="avaliar"><i class="fas fa-smile-o"></i> Avaliar</button>
                         </div>
                     </div>
                 </div>
@@ -117,6 +117,14 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#avaliar').on('click',function(){
+            let id_usuario = $(this).closest('.card').data('id_usuario');
+            carregarTela('../../avaliacao/formulario?id_usuario=' + id_usuario, "#content-secundario");
+        });
 
+        $('#historico').on('click',function(){
+            let id_usuario = $(this).closest('.card').data('id_usuario');
+            carregarTela('../../avaliacao/historico?id_usuario=' + id_usuario, "#content-secundario");
+        });
     });
 </script>
