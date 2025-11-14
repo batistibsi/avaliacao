@@ -4,7 +4,8 @@ class Util
 
 	public static $erro;
 
-	public static function gotoIndex() {
+	public static function gotoIndex()
+	{
 		echo "<script>window.location = '../../index'</script>";
 		exit();
 	}
@@ -107,6 +108,32 @@ class Util
 		} else {
 			return $numero; // formato desconhecido
 		}
+	}
+
+	public static function gerarIniciais($nome)
+	{
+		// Remove múltiplos espaços e trim
+		$nome = trim(preg_replace('/\s+/', ' ', $nome));
+
+		if ($nome === '') {
+			return '';
+		}
+
+		// Separa pelo espaço
+		$partes = explode(' ', $nome);
+
+		// 1ª letra do primeiro nome
+		$ini1 = mb_substr($partes[0], 0, 1, 'UTF-8');
+
+		// 2ª letra: do último nome (se existir)
+		if (count($partes) > 1) {
+			$ini2 = mb_substr(end($partes), 0, 1, 'UTF-8');
+		} else {
+			// Se tiver só um nome, usa a segunda letra do mesmo nome
+			$ini2 = mb_substr($partes[0], 1, 1, 'UTF-8') ?: '';
+		}
+
+		return mb_strtoupper($ini1 . $ini2, 'UTF-8');
 	}
 
 	public function __construct() {}

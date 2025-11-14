@@ -40,7 +40,7 @@
 
     .badge-status {
         font-size: .75rem;
-        padding: .25rem .55rem;
+        padding: .85rem .85rem;
         border-radius: 999px;
     }
 
@@ -79,7 +79,7 @@
                     <div class="d-flex">
                         <div class="mr-3">
                             <!-- pode trocar por <img src="..." class="user-avatar"> -->
-                            <div class="user-initials">AS</div>
+                            <div class="user-initials"><?= Util::gerarIniciais($value['nome']) ?></div>
                         </div>
                         <div class="flex-grow-1">
                             <div class="d-flex align-items-start">
