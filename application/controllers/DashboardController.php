@@ -53,7 +53,7 @@ class DashboardController extends Zend_Controller_Action
 
 	}
 
-	public function individualAction()
+	public function usuarioAction()
 	{
 		$this->view->header = "header.phtml";
 		$this->view->footer = "footer.phtml";
