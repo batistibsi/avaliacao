@@ -102,9 +102,9 @@
                 </div>
                 <div class="card-footer bg-white border-0 pt-0 pb-3 px-4">
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" id="historico"><i class="fas fa-user mr-1"></i> Historico</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary historico"><i class="fas fa-user mr-1"></i> Historico</button>
                         <div>
-                            <button type="button" class="btn btn-sm btn-primary" id="avaliar"><i class="fas fa-smile-o"></i> Avaliar</button>
+                            <button type="button" class="btn btn-sm btn-primary avaliar"><i class="fas fa-smile-o"></i> Avaliar</button>
                         </div>
                     </div>
                 </div>
@@ -117,14 +117,14 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#avaliar').on('click',function(){
+        $('.avaliar').on('click',function(){
             let id_usuario = $(this).closest('.card').data('id_usuario');
             carregarTela('../../avaliacao/formulario?id_usuario=' + id_usuario, "#content");
         });
 
-        $('#historico').on('click',function(){
+        $('.historico').on('click',function(){
             let id_usuario = $(this).closest('.card').data('id_usuario');
-            carregarTela('../../avaliacao/historico?id_usuario=' + id_usuario, "#content");
+            carregarTela('../../dashboard/usuario?id_usuario=' + id_usuario, "#content");
         });
     });
 </script>
