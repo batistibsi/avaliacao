@@ -1,60 +1,60 @@
 <style>
-    .list-itens {
-        min-height: 60px;
-        padding: 10px;
-        background-color: #f8f9fa;
-        border: 1px dashed #ccc;
-        border-radius: 6px;
-    }
+	.list-itens {
+		min-height: 60px;
+		padding: 10px;
+		background-color: #f8f9fa;
+		border: 1px dashed #ccc;
+		border-radius: 6px;
+	}
 
-    .bloco {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 6px;
-        padding: 10px;
-        margin-right: 15px;
-        width: 100%;
-        min-height: 200px;
-        flex: 0 0 auto;
-        /* NÃO encolhe e mantém largura fixa */
-        margin-right: 15px;
-    }
+	.bloco {
+		background: #f8f9fa;
+		border: 1px solid #dee2e6;
+		border-radius: 6px;
+		padding: 10px;
+		margin-right: 15px;
+		width: 100%;
+		min-height: 200px;
+		flex: 0 0 auto;
+		/* NÃO encolhe e mantém largura fixa */
+		margin-right: 15px;
+	}
 
-    .item {
-        background: #ffffff;
-        padding: 10px;
-        margin-bottom: 8px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        cursor: move;
-    }
+	.item {
+		background: #ffffff;
+		padding: 10px;
+		margin-bottom: 8px;
+		border: 1px solid #ced4da;
+		border-radius: 4px;
+		cursor: move;
+	}
 
-    .container-flex {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
+	.container-flex {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+	}
 
-    .container-flex {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: 10px;
-    }
+	.container-flex {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		padding-bottom: 10px;
+	}
 
-    /* MOBILE: stack os blocos */
-    @media (max-width: 768px) {
-        .container-flex {
-            flex-direction: column;
-            overflow-x: visible;
-        }
+	/* MOBILE: stack os blocos */
+	@media (max-width: 768px) {
+		.container-flex {
+			flex-direction: column;
+			overflow-x: visible;
+		}
 
-        .bloco {
-            width: 100%;
-            margin-right: 0;
-            margin-bottom: 15px;
-        }
-    }
+		.bloco {
+			width: 100%;
+			margin-right: 0;
+			margin-bottom: 15px;
+		}
+	}
 </style>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -103,6 +103,10 @@
 				<div class="form-group">
 					<label for="itemNome">Pergunta: </label>
 					<textarea class="form-control" id="itemNome" required></textarea>
+				</div>
+				<div class="form-group">
+					<label for="itemPeso">Multiplicador: </label>
+					<input type="number" min=1 max=10 class="form-control text-right" id="itemPeso" required />
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -176,14 +180,15 @@
 
 	var itenNumero = 0;
 
-	function novoItem(nome) {
+	function novoItem(nome, peso) {
 		//console.log(opcoes);
 		// Criando novo item
 		const itemHtml = $(`
-						<div class="item" data-id-item="${itenNumero}" data-nome="${nome}">
+						<div class="item" data-id-item="${itenNumero}" data-nome="${nome}" data-peso="${peso}">
 							<div class="d-flex justify-content-between align-items-center">
 							<div>
 								<p class="item-nome lead">${nome}</p>
+								<p><strong>Multiplicador:</strong> <span class="item-peso">${peso}</span></p>
 							</div>
 							<div class="ml-2">
 								<button type="button" class="btn btn-sm btnEditarItem text-secondary" title="Editar"><i class="fa fa-edit fa-lg"></i></button>
@@ -269,6 +274,7 @@
 
 			// Preenche o modal com os dados do item
 			$('#itemNome').val($item.data('nome'));
+			$('#itemPeso').val($item.data('peso'));
 
 			let idItem = $item.data('id-item');
 
@@ -309,19 +315,22 @@
 			e.preventDefault();
 
 			const nome = $('#itemNome').val().trim();
+			const peso = $('#itemPeso').val().trim();
 
 			if (!nome) return;
 
 			if (itemSelecionado) {
 				// Editando item existente
 				itemSelecionado.data('nome', nome);
+				itemSelecionado.data('peso', peso);
 
 				itemSelecionado.find('.item-nome').text(nome);
+				itemSelecionado.find('.item-peso').text(peso);
 
 				itemSelecionado = null;
 
 			} else if (blocoSelecionado) {
-				novoItem(nome);
+				novoItem(nome, peso);
 			}
 
 			$('#modalNovoItem').modal('hide');
@@ -346,21 +355,13 @@
 				});
 			});
 
-			if (itens.length > 0) {
-				$('#itemProximo').empty();
-				$('#itemProximo').append(new Option('', ''));
-				itens.forEach(value => {
-					$('#itemProximo').append(new Option(value.bloco + ' - ' + value.nome, value.id));
-				});
-				$('#itemProximo').trigger('change');
-			}
-
 		});
 
 		$('#modalNovoItem').on('hidden.bs.modal', function() {
 			itemSelecionado = null;
 			blocoSelecionado = null;
 			$('#itemNome').val('');
+			$('#itemPeso').val('');
 		});
 
 		<?php if ($this->registro): ?>
@@ -381,7 +382,7 @@
 					blocoSelecionado = novoBloco(bloco.nome).find('.list-itens');
 					if (bloco.itens.length > 0) {
 						$.each(bloco.itens, function(i, pergunta) {
-							novoItem(pergunta.pergunta)
+							novoItem(pergunta.pergunta,pergunta.peso)
 						});
 					}
 				});
@@ -413,13 +414,15 @@
 				const itens = [];
 				$bloco.find('.item').each(function(iItem) {
 					const nomeItem = $(this).data('nome');
+					const pesoItem = $(this).data('peso');
 
 					const id = $(this).data('id-item');
 
 					itens.push({
 						id: id,
 						bloco: nomeBloco,
-						nome: nomeItem
+						nome: nomeItem,
+						peso: pesoItem
 					});
 				});
 

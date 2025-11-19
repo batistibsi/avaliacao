@@ -75,12 +75,15 @@ class Formulario
                                 if (count($bloco->itens)) {
                                         foreach ($bloco->itens as $pergunta) {
                                                 $ordem++;
-                                                $query = "INSERT INTO avaliacao_pergunta(id_formulario, pergunta, id_bloco, ordem)
+                                                $query = "INSERT INTO avaliacao_pergunta(id_formulario, pergunta, id_bloco, peso, ordem)
 									VALUES (" . $id_formulario . ",
 											'" . $pergunta->nome . "',
                                                                                         " . $id_bloco . ",
+                                                                                        " . $pergunta->peso . ",
 											" . $ordem . ") 
 									RETURNING id_pergunta;";
+
+                                                // die($query);
 
                                                 $registros = $db->fetchAll($query);
 
@@ -116,7 +119,7 @@ class Formulario
 
                 $id_formulario = $registros[0]['id_formulario'];
 
-                if(!self::estrutura($id_formulario, $estrutura)){
+                if (!self::estrutura($id_formulario, $estrutura)) {
                         $db->rollback();
                         return false;
                 }
@@ -148,9 +151,9 @@ class Formulario
 
                 $db->update("avaliacao_formulario", $data, "id_formulario = " . $id_formulario);
 
-                $db->delete("avaliacao_bloco","id_formulario=" . $id_formulario);
+                $db->delete("avaliacao_bloco", "id_formulario=" . $id_formulario);
 
-                if(!self::estrutura($id_formulario, $estrutura)){
+                if (!self::estrutura($id_formulario, $estrutura)) {
                         $db->rollback();
                         return false;
                 }
