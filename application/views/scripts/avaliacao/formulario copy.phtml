@@ -1,11 +1,11 @@
 <style>
-  .card-formulario {
+   .card-formulario {
     border: 1px solid #e5e7eb;
     border-radius: 1rem;
     box-shadow: 0 8px 22px rgba(0, 0, 0, .06);
   }
 
-  /* Botões de avaliação (1 linha + scroll) */
+  /* Rostos (1 linha + scroll) */
   .faces-group {
     display: flex;
     flex-wrap: nowrap;
@@ -42,21 +42,19 @@
   }
 
   .face-item label {
-    min-width: 80px;
-    height: 40px;
-    border-radius: 999px;
-    padding: 0 .85rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: .9rem;
+    font-size: 28px;
     line-height: 1;
     cursor: pointer;
     user-select: none;
     background: #fff;
     border: 1px solid #e5e7eb;
-    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
-    white-space: nowrap;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
   }
 
   .face-item label:hover {
@@ -80,10 +78,10 @@
     }
 
     .face-item label {
-      min-width: 70px;
-      height: 36px;
-      font-size: .85rem;
-      border-radius: 20px;
+      width: 48px;
+      height: 48px;
+      font-size: 24px;
+      border-radius: 12px;
     }
   }
 
@@ -93,10 +91,10 @@
     }
 
     .face-item label {
-      min-width: 64px;
-      height: 34px;
-      font-size: .8rem;
-      border-radius: 18px;
+      width: 42px;
+      height: 42px;
+      font-size: 22px;
+      border-radius: 10px;
     }
   }
 
@@ -230,7 +228,7 @@
     <div class="col-lg-10">
       <div class="card card-formulario">
         <div class="card-body p-4 p-md-5">
-          <h2 class="mb-3 text-primary"><?= $this->formulario['nome'] ?> - <?= $this->usuario['nome'] ?></h2>
+          <h2 class="mb-3 text-primary"><?=$this->formulario['nome']?> - <?=$this->usuario['nome']?></h2>
           <p class="muted mb-4"></p>
 
           <form id="formAvaliacao" novalidate>
@@ -241,14 +239,14 @@
                 $qid = htmlspecialchars($p['id'] ?? ('q' . $bIndex . '_' . $pIndex));
                 $pergunta = htmlspecialchars($p['pergunta']);
               ?>
-                <div class="question bg-light" data-qid="<?= $qid ?>" data-multiplicador="<?= $p['peso'] ?>?>">
+                <div class="question bg-light" data-qid="<?= $qid ?>">
                   <div class="d-flex align-items-center mb-2">
                     <span class="badge badge-secondary mr-2"><?= ($pIndex + 1) ?></span>
                     <strong><?= $pergunta ?></strong>
                   </div>
 
-                  <!-- Botões de avaliação -->
-                  <div class="faces-group d-flex justify-content-between" role="radiogroup" aria-label="Avaliação de satisfação" data-qid="<?= $qid ?>"></div>
+                  <!-- Rostos 1..10 -->
+                  <div class="faces-group d-flex justify-content-between" role="radiogroup" aria-label="Avaliação 1 a 10" data-qid="<?= $qid ?>"></div>
 
                   <div class="d-flex align-items-center mt-2">
                     <div class="flex-grow-1">
@@ -259,14 +257,11 @@
                     <div class="ml-3"><span class="badge-score" data-role="badge">SN</span></div>
                   </div>
 
-                  <div class="d-flex justify-content-between mt-2 small text-muted">
-                    <span>Ruim</span>
-                    <span>Regular</span>
-                    <span>Bom</span>
-                    <span>Ótimo</span>
+                  <div class="d-none justify-content-between mt-2">
+                    <small class="muted">Péssimo</small><small class="muted">Normal</small><small class="muted">Ótimo</small>
                   </div>
-
-                  <div class="text-danger mt-1 d-none" data-role="erro-nota">Selecione uma opção.</div>
+                  
+                  <div class="text-danger mt-1 d-none" data-role="erro-nota">Selecione uma nota (1 a 10).</div>
 
                   <!-- Toggle Collapse -->
                   <div class="mt-2">
@@ -335,8 +330,6 @@
     var MAX_FILES = 5,
       MAX_SIZE_MB = 10;
     var ACCEPTED_PREFIX = ['image/', 'audio/', 'video/', 'application/pdf'];
-    var NOTA_LABELS = ['Ruim', 'Regular', 'Bom', 'Ótimo'];
-    var NOTA_MAX = 3;
 
     /* ====== Estados por pergunta ====== */
     var filesQueues = {}; // {qid: File[]}
@@ -344,8 +337,7 @@
 
     /* ====== Helpers ====== */
     function hslByScore(v) {
-      // v entre 0 e 3 -> de vermelho para verde
-      var hue = v * (130 / NOTA_MAX); // 0 = vermelho, ~130 = verde
+      var hue = 0 + (v - 1) * (130 / 9);
       return 'hsl(' + hue + ', 75%, 60%)';
     }
 
@@ -377,101 +369,58 @@
       });
     }
 
-    /* ====== Inicializa botões por pergunta (0..3) ====== */
+    /* ====== Inicializa rostos por pergunta ====== */
     $('.faces-group').each(function() {
       var $fg = $(this),
         qid = $fg.data('qid');
-
-      var options = [{
-          value: 0,
-          label: 'Ruim'
-        },
-        {
-          value: 1,
-          label: 'Regular'
-        },
-        {
-          value: 2,
-          label: 'Bom'
-        },
-        {
-          value: 3,
-          label: 'Ótimo'
-        }
-      ];
-
-      options.forEach(function(opt) {
-        var id = qid + '-nota' + opt.value;
+      for (var i = 1; i <= 10; i++) {
+        var id = qid + '-nota' + i;
         $fg.append(
           '<div class="face-item">' +
-          '<input type="radio" name="itens[' + qid + '][nota]" id="' + id + '" value="' + opt.value + '">' +
-          '<label for="' + id + '" title="' + opt.label + '" aria-label="' + opt.label + '" tabindex="0" data-val="' + opt.value + '">' +
-          opt.label +
+          '<input type="radio" name="itens[' + qid + '][nota]" id="' + id + '" value="' + i + '">' +
+          '<label for="' + id + '" title="' + i + ' de 10" aria-label="' + i + ' de 10" data-val="' + i + '">' +
+          (["😡", "😠", "😦", "😕", "😐", "🙂", "😊", "😃", "😄", "🤩"][i - 1]) +
           '</label>' +
           '</div>'
         );
-      });
+      }
     });
 
     /* ====== UI: change nota (delegado por pergunta) ====== */
     $('#formAvaliacao').on('change', 'input[type=radio]', function() {
       var $q = $(this).closest('.question');
-      var multiplicador = parseInt($(this).closest('.question').data('multiplicador'));
       var nota = parseInt(this.value, 10);
-
+      // barra + badge
       var $bar = $q.find('.progress-bar');
       var $badge = $q.find('[data-role=badge]');
-
-      var pct = (nota / NOTA_MAX) * 100;
-      var cor = hslByScore(nota);
-
+      var pct = (nota / 10) * 100,
+        cor = hslByScore(nota);
       $bar.css({
         width: pct + '%',
         background: cor
       }).attr('aria-valuenow', pct);
-
-      var label = NOTA_LABELS[nota] || 'SN';
-      var notaMultiplicada = nota * multiplicador;
-      $badge.text(label + ' (' + notaMultiplicada + ')');
-
-      $q.find('.face-item label').css({
-        background: '#fff',
-        color: '#111827'
-      });
-
-      $q.find('label[for="' + this.id + '"]').css({
-        background: cor.replace('60%', '90%'),
-        color: '#111827'
-      });
-
+      $badge.text(nota + '/10');
+      $q.find('.face-item label').css('background', '#fff');
+      $q.find('label[for="' + this.id + '"]').css('background', cor.replace('60%', '90%'));
       $q.find('[data-role=erro-nota]').addClass('d-none');
     });
 
-    /* ====== Setas + Enter/Espaço nos botões (acessibilidade por pergunta) ====== */
+    /* ====== Setas em labels (acessibilidade por pergunta) ====== */
     $('#formAvaliacao').on('keydown', '.face-item label', function(e) {
       var $q = $(this).closest('.question');
+      var qid = $q.data('qid');
       var code = e.which || e.keyCode;
-      var $radios = $q.find('input[type=radio]');
-      var $currentInput = $('#' + $(this).attr('for'));
-
+      var $input = $('#' + $(this).attr('for'));
       if (code === 13 || code === 32) {
-        // Enter ou Espaço -> seleciona
         e.preventDefault();
-        $currentInput.prop('checked', true).trigger('change');
+        $input.prop('checked', true).trigger('change');
       }
-
       if (code === 37 || code === 39) {
-        // Setas -> muda opção
         e.preventDefault();
         var $sel = $q.find('input[type=radio]:checked');
-        var idx = $radios.index($sel.length ? $sel : $currentInput);
-        if (idx < 0) idx = 0;
-        idx = code === 39 ? idx + 1 : idx - 1;
-        if (idx < 0) idx = 0;
-        if (idx > $radios.length - 1) idx = $radios.length - 1;
-        var $next = $radios.eq(idx);
-        $next.prop('checked', true).trigger('change');
-        $next.next('label').focus();
+        var val = parseInt($sel.val() || 0, 10);
+        val = code === 39 ? Math.min(10, val + 1 || 1) : Math.max(1, (val || 2) - 1);
+        $('#' + qid + '-nota' + val).prop('checked', true).trigger('change').next('label').focus();
       }
     });
 
@@ -659,7 +608,7 @@
       e.preventDefault();
       var valido = true;
 
-      // valida: toda pergunta deve ter opção selecionada
+      // valida: toda pergunta deve ter nota
       $('.question').each(function() {
         var $q = $(this);
         var hasNota = $q.find('input[type=radio]:checked').length > 0;
@@ -678,7 +627,7 @@
       // monta FormData
       var fd = new FormData();
       fd.append('anonimo', 'true');
-      fd.append('origem', 'avaliacao-blocos-botoes');
+      fd.append('origem', 'avaliacao-blocos-rostos');
       fd.append('timestamp', new Date().toISOString());
 
       // notas + comentários
@@ -718,28 +667,19 @@
       */
     });
 
-    /* ====== Setas globais para pergunta em foco ====== */
+    /* ====== Setas globais só para a pergunta em foco ====== */
     $(document).on('keydown', function(e) {
       if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
       if (e.which !== 37 && e.which !== 39) return;
-
       var $focusedQ = $('.question').has(':focus').first();
       if ($focusedQ.length === 0) return;
-
-      var $radios = $focusedQ.find('input[type=radio]');
+      var qid = $focusedQ.data('qid');
       var $sel = $focusedQ.find('input[type=radio]:checked');
-      if (!$sel.length) return;
-
-      var idx = $radios.index($sel);
-      if (idx < 0) return;
-
+      var val = parseInt($sel.val() || 0, 10);
+      if (!val) return;
       e.preventDefault();
-      idx = e.which === 39 ? idx + 1 : idx - 1;
-      if (idx < 0) idx = 0;
-      if (idx > $radios.length - 1) idx = $radios.length - 1;
-
-      var $next = $radios.eq(idx);
-      $next.prop('checked', true).trigger('change').next('label').focus();
+      val = e.which === 39 ? Math.min(10, val + 1) : Math.max(1, val - 1);
+      $('#' + qid + '-nota' + val).prop('checked', true).trigger('change').next('label').focus();
     });
   })();
 </script>
