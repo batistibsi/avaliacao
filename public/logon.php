@@ -68,11 +68,11 @@
                                             <button class="btn btn-success btn-lg" type="submit">Entrar</button>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <!--div class="col-12">
                                         <a href='./esqueci.php' class="text-secondary">
                                             Esqueci minha senha
                                         </a>
-                                    </div>
+                                    </div-->
                                 </div>
                             </form>
                             <div class="row">
