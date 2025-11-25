@@ -677,9 +677,9 @@
 
       // monta FormData
       var fd = new FormData();
-      fd.append('anonimo', 'true');
-      fd.append('origem', 'avaliacao-blocos-botoes');
-      fd.append('timestamp', new Date().toISOString());
+      fd.append('id_usuario', <?=$this->usuario['id_usuario']?>);
+      fd.append('id_grupo', <?=$this->grupo['id_grupo']?>);
+      fd.append('id_formulario', <?=$this->formulario['id_formulario']?>);
 
       // notas + comentários
       $('.question').each(function() {
@@ -703,19 +703,40 @@
       });
 
       // AJAX real (descomente e configure sua rota):
-      /*
       $.ajax({
-        url: '/api/avaliacoes/blocos', // TODO: sua rota
+        url: '../../avaliacao/salvar', // TODO: sua rota
         method: 'POST',
         processData: false,
         contentType: false,
         data: fd
-      }).done(function(res){
-        $('#resultado').removeClass('d-none');
-      }).fail(function(){
-        alert('Falha ao enviar sua avaliação. Tente novamente.');
+      }).done(function(data) {
+        if (data.trim().length > 0) {
+          swal({
+            title: "Atenção!",
+            text: data,
+            type: "error"
+          });
+        } else {
+          swal({
+            title: "Sucesso!",
+            text: "Salvo com sucesso!",
+            type: "success",
+            timer: 1,
+            showConfirmButton: false
+          }, function() {
+            carregarTela("../../avaliacao");
+            setTimeout(function() {
+              swal.close();
+            }, 2000);
+          });
+        }
+      }).fail(function() {
+        swal({
+          title: "Atenção!",
+          text: "Erro no envio do formulário",
+          type: "error"
+        });
       });
-      */
     });
 
     /* ====== Setas globais para pergunta em foco ====== */

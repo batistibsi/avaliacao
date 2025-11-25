@@ -77,7 +77,7 @@ class AvaliacaoController extends Zend_Controller_Action
 		}
 
 		$this->view->formulario = $formulario;
-		
+
 		$this->view->blocos = Formulario::buscarBlocos($grupo['id_formulario']);
 	}
 
@@ -87,5 +87,26 @@ class AvaliacaoController extends Zend_Controller_Action
 		$this->view->usuario = Zend_Registry::get('usuario');
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
+	}
+
+	public function salvarAction()
+	{
+		$this->_helper->viewRenderer->setNoRender();
+
+		$campos = [];
+
+		$campos['id_grupo'] = !empty($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : null;
+		$campos['id_formulario'] = !empty($_REQUEST["id_formulario"]) ? (int)  $_REQUEST["id_formulario"] : null;
+		$campos['id_usuario'] = !empty($_REQUEST["id_usuario"]) ? (int)  $_REQUEST["id_usuario"] : null;
+		$campos['id_avaliador'] = Zend_Registry::get('id_usuario');
+		$campos['data_envio'] = date('Y-m-d H:i:s');
+
+		$respostas = $_REQUEST['itens'];
+
+		$result = Envio::insert($campos, $respostas);
+
+		if (!$result) {
+			echo Envio::$erro;
+		}
 	}
 }
