@@ -238,7 +238,7 @@
               <h3 class="block-title text-info"><?= htmlspecialchars($bloco['nome']) ?></h3>
 
               <?php foreach ($bloco['itens'] as $pIndex => $p):
-                $qid = htmlspecialchars($p['id'] ?? ('q' . $bIndex . '_' . $pIndex));
+                $qid = $p['id_pergunta'];
                 $pergunta = htmlspecialchars($p['pergunta']);
               ?>
                 <div class="question bg-light" data-qid="<?= $qid ?>" data-multiplicador="<?= $p['peso'] ?>?>">

@@ -23,14 +23,26 @@ class Envio
         public static function insert($campos, $respostas)
         {
 
-                if (!$campos['id_grupo']) {
-                        self::$erro = "Grupo não informado!";
+                if (!$respostas || !count($respostas)) {
+                        self::$erro = "Não há respostas no envio!";
                         return false;
                 }
                 if (!$campos['id_formulario']) {
                         self::$erro = "Formulario não informado!";
                         return false;
                 }
+                $estrutura = Formulario::buscarBlocos($campos['id_formulario']);
+
+                if (!$estrutura) {
+                        self::$erro = "Estrutura de formulario não encontrada!";
+                        return false;
+                }
+
+                if (!$campos['id_grupo']) {
+                        self::$erro = "Grupo não informado!";
+                        return false;
+                }
+
                 if (!$campos['id_usuario']) {
                         self::$erro = "Usuário não informado!";
                         return false;
@@ -57,6 +69,31 @@ class Envio
                 $registros = $db->fetchAll($query);
 
                 $id_envio = $registros[0]['id_envio'];
+
+                foreach ($estrutura as $bloco) {
+                        if (!$bloco['itens'] || !count($bloco['itens'])) continue;
+
+                        foreach ($bloco['itens'] as $pergunta) {
+
+                                if (!isset($respostas[$pergunta['id_pergunta']]['nota'])) {
+                                        self::$erro = "Problemas ao resgatar a resposta";
+                                        return false;
+                                }
+
+                                $query = "INSERT INTO avaliacao_resposta(id_envio, pergunta, bloco, resposta, observacao, peso)
+                                        VALUES (" . $id_envio . ",
+                                                '" . $pergunta['pergunta'] . "',
+                                                '" . $bloco['nome'] . "',
+                                                " . $respostas[$pergunta['id_pergunta']]['nota'] . ",
+                                                '" . $respostas[$pergunta['id_pergunta']]['comentario'] . "',
+                                                " . $pergunta['peso'] . ")
+                                        RETURNING id_resposta;";
+
+                                $registros = $db->fetchAll($query);
+
+                                //$id_resposta = $registros[0]['id_resposta'];
+                        }
+                }
 
                 return true;
         }

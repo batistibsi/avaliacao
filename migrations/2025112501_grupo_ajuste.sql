@@ -39,3 +39,11 @@ ALTER TABLE IF EXISTS public.avaliacao_envio
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
+alter table avaliacao_resposta drop column tipo;
+alter table avaliacao_resposta drop column opcoes;
+
+ALTER TABLE IF EXISTS public.avaliacao_resposta
+    RENAME grupo TO bloco;
+
+alter table avaliacao_resposta drop column ordem;
