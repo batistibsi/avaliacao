@@ -57,6 +57,7 @@ class Envio
                 }
 
                 $db = Zend_Registry::get('db');
+                $db->beginTransaction();
 
                 $query = "INSERT INTO avaliacao_envio(id_grupo, id_formulario, id_usuario, id_avaliador, data_envio)
                         VALUES (" . $campos['id_grupo'] . ",
@@ -77,6 +78,7 @@ class Envio
 
                                 if (!isset($respostas[$pergunta['id_pergunta']]['nota'])) {
                                         self::$erro = "Problemas ao resgatar a resposta";
+                                        $db->rollback();
                                         return false;
                                 }
 
@@ -94,6 +96,8 @@ class Envio
                                 //$id_resposta = $registros[0]['id_resposta'];
                         }
                 }
+
+                $db->commit();
 
                 return true;
         }
