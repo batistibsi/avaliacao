@@ -12,10 +12,6 @@ body {
   height: calc(100% - 103.24px);
 }
 
-.sidebar.active {
-  margin-left: -200px;
-}
-
 .sidebar {
   min-width: 200px;
   max-width: 200px;
@@ -26,6 +22,23 @@ body {
 
 .sidebar.active {
   margin-left: -200px;
+}
+
+@media (max-width: 767.98px) {
+  .sidebar {
+    position: absolute;
+    height: calc(100% - 103.24px);
+    z-index: 2000;
+    min-width: 200px;
+    max-width: 200px;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    transition: all 0.4s;
+    background-color: #eff5f1 !important;
+  }
+
+  .sidebar.active {
+    transform: translateX(-100%);
+  }
 }
 
 .sidebar-sticky {
