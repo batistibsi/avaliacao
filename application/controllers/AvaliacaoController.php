@@ -101,7 +101,7 @@ class AvaliacaoController extends Zend_Controller_Action
 		$campos['id_avaliador'] = Zend_Registry::get('id_usuario');
 		$campos['data_envio'] = date('Y-m-d H:i:s');
 
-		$respostas = $_REQUEST['itens'];
+		$respostas = !empty($_REQUEST['itens'])?$_REQUEST['itens']:[];
 
 		$result = Envio::insert($campos, $respostas);
 
