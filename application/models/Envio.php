@@ -19,6 +19,45 @@ class Envio
                 return false;
         }
 
+        public static function normalizePerguntasFiles($root)
+        {
+                $result = [];
+                if (empty($root) || !isset($root['name'])) {
+                        return $result;
+                }
+                foreach ($root['name'] as $qid => $level1) {
+                        foreach ($level1 as $fieldName => $fieldValue) {
+                                // anexos[] vem como array, audio vem como string
+                                if (is_array($fieldValue)) {
+                                        // anexos
+                                        foreach ($fieldValue as $idx => $name) {
+                                                $error = $root['error'][$qid][$fieldName][$idx];
+                                                if ($error === UPLOAD_ERR_NO_FILE) continue;
+                                                $result[$qid][$fieldName][] = [
+                                                        'name'     => $name,
+                                                        'type'     => $root['type'][$qid][$fieldName][$idx],
+                                                        'tmp_name' => $root['tmp_name'][$qid][$fieldName][$idx],
+                                                        'error'    => $error,
+                                                        'size'     => $root['size'][$qid][$fieldName][$idx],
+                                                ];
+                                        }
+                                } else {
+                                        // campo único (audio)
+                                        $error = $root['error'][$qid][$fieldName];
+                                        if ($error === UPLOAD_ERR_NO_FILE) continue;
+                                        $result[$qid][$fieldName] = [
+                                                'name'     => $fieldValue,
+                                                'type'     => $root['type'][$qid][$fieldName],
+                                                'tmp_name' => $root['tmp_name'][$qid][$fieldName],
+                                                'error'    => $error,
+                                                'size'     => $root['size'][$qid][$fieldName],
+                                        ];
+                                }
+                        }
+                }
+                return $result;
+        }
+
 
         public static function insert($campos, $respostas)
         {
@@ -56,6 +95,8 @@ class Envio
                         return false;
                 }
 
+                $uploadBaseDir = '/var/www/avaliacao/uploads';
+
                 $db = Zend_Registry::get('db');
                 $db->beginTransaction();
 
@@ -71,12 +112,26 @@ class Envio
 
                 $id_envio = $registros[0]['id_envio'];
 
+                // Garante a pasta base da avaliação
+                $avaliacaoDir = $uploadBaseDir . '/' . date('Ymd') . '/' . $id_envio;
+                if (!is_dir($avaliacaoDir) && !mkdir($avaliacaoDir, 0775, true) && !is_dir($avaliacaoDir)) {
+                        throw new RuntimeException('Não foi possível criar a pasta de uploads.');
+                }
+
+                // ==== 2) NORMALIZA FILES POR PERGUNTA ====
+                $filesByPergunta = [];
+                if (isset($_FILES['itens'])) {
+                        $filesByPergunta = self::normalizePerguntasFiles($_FILES['itens']);
+                }
+
                 foreach ($estrutura as $bloco) {
                         if (!$bloco['itens'] || !count($bloco['itens'])) continue;
 
                         foreach ($bloco['itens'] as $pergunta) {
 
-                                if (!isset($respostas[$pergunta['id_pergunta']]['nota'])) {
+                                $id_pergunta = $pergunta['id_pergunta'];
+
+                                if (!isset($respostas[$id_pergunta]['nota'])) {
                                         self::$erro = "Problemas ao resgatar a resposta";
                                         $db->rollback();
                                         return false;
@@ -86,14 +141,81 @@ class Envio
                                         VALUES (" . $id_envio . ",
                                                 '" . $pergunta['pergunta'] . "',
                                                 '" . $bloco['nome'] . "',
-                                                " . $respostas[$pergunta['id_pergunta']]['nota'] . ",
-                                                '" . $respostas[$pergunta['id_pergunta']]['comentario'] . "',
+                                                " . $respostas[$id_pergunta]['nota'] . ",
+                                                '" . $respostas[$id_pergunta]['comentario'] . "',
                                                 " . $pergunta['peso'] . ")
                                         RETURNING id_resposta;";
 
                                 $registros = $db->fetchAll($query);
 
-                                //$id_resposta = $registros[0]['id_resposta'];
+                                $id_resposta = $registros[0]['id_resposta'];
+
+                                // 3.2) arquivos da pergunta
+                                $files = $filesByPergunta[$id_pergunta] ?? [];
+
+                                // Pasta específica da pergunta
+                                $perguntaDir = $avaliacaoDir . '/' . $id_pergunta;
+                                if (!is_dir($perguntaDir) && !mkdir($perguntaDir, 0775, true) && !is_dir($perguntaDir)) {
+                                        throw new RuntimeException("Não foi possível criar a pasta da pergunta {$qid}.");
+                                }
+
+                                // anexos[]
+                                if (!empty($files['anexos'])) {
+                                        foreach ($files['anexos'] as $file) {
+                                                if ($file['error'] !== UPLOAD_ERR_OK) {
+                                                        // pode ignorar ou lançar erro; aqui vamos ignorar com segurança
+                                                        continue;
+                                                }
+
+                                                $nomeOriginal = $file['name'];
+                                                $ext = pathinfo($nomeOriginal, PATHINFO_EXTENSION);
+                                                $nomeDestino = uniqid('anexo_', true) . ($ext ? '.' . $ext : '');
+                                                $caminhoDestino = $perguntaDir . '/' . $nomeDestino;
+
+                                                if (!move_uploaded_file($file['tmp_name'], $caminhoDestino)) {
+                                                        throw new RuntimeException("Falha ao mover anexo da pergunta {$qid}.");
+                                                }
+
+                                                $query = "INSERT INTO avaliacao_arquivo(id_resposta, tipo, nome_original, caminho_arquivo, mime_type, tamanho_bytes)
+                                                        VALUES (" . $id_resposta . ",
+                                                                'anexo',
+                                                                '" . $nomeOriginal . "',
+                                                                '" . $caminhoDestino . "',
+                                                                '" . $file['type'] . "',
+                                                                " . $file['size'] . ")
+                                                        RETURNING id_arquivo;";
+
+                                                $registros = $db->fetchAll($query);
+                                        }
+                                }
+
+                                // audio
+                                if (!empty($files['audio'])) {
+                                        $file = $files['audio'];
+                                        if ($file['error'] === UPLOAD_ERR_OK) {
+                                                $nomeOriginal = $file['name'] ?: ('audio_' . $qid . '.webm');
+                                                $ext = pathinfo($nomeOriginal, PATHINFO_EXTENSION);
+                                                if (!$ext) $ext = 'webm';
+
+                                                $nomeDestino = uniqid('audio_', true) . '.' . $ext;
+                                                $caminhoDestino = $perguntaDir . '/' . $nomeDestino;
+
+                                                if (!move_uploaded_file($file['tmp_name'], $caminhoDestino)) {
+                                                        throw new RuntimeException("Falha ao mover áudio da pergunta {$qid}.");
+                                                }
+
+                                                $query = "INSERT INTO avaliacao_arquivo(id_resposta, tipo, nome_original, caminho_arquivo, mime_type, tamanho_bytes)
+                                                        VALUES (" . $id_resposta . ",
+                                                                'audio',
+                                                                '" . $nomeOriginal . "',
+                                                                '" . $caminhoDestino . "',
+                                                                '" . $file['type'] . "',
+                                                                " . $file['size'] . ")
+                                                        RETURNING id_arquivo;";
+
+                                                $registros = $db->fetchAll($query);
+                                        }
+                                }
                         }
                 }
 
