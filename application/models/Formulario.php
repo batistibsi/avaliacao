@@ -47,7 +47,7 @@ class Formulario
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select * from avaliacao_formulario where id_formulario <> " . $id_formulario . " and nome = '" . $nome . "'";
+                $select = "select * from avaliacao_formulario where ativo and id_formulario <> " . $id_formulario . " and nome = '" . $nome . "'";
 
                 $registros = $db->fetchAll($select);
 
@@ -104,7 +104,7 @@ class Formulario
                 }
 
                 if (!self::uniqueNome(0, $nome)) {
-                        Usuario::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
+                        self::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
                         return false;
                 }
 
@@ -138,7 +138,7 @@ class Formulario
                 }
 
                 if (!self::uniqueNome($id_formulario, $nome)) {
-                        Usuario::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
+                        self::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
                         return false;
                 }
 

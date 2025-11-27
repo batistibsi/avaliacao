@@ -9,15 +9,12 @@
 
  <div class="d-flex justify-content-center justify-content-md-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
      <h2 class="h2 text-info">Avaliação</h2>
-     <? if ($this->permissao == 1): ?>
-         <div class="mr-4"></div>
-         <select class="form-control" id="id_grupo">
-             <option value="0">Todos</option>
-             <? if (count($this->grupos) > 0) foreach ($this->grupos as $value): ?>
-                 <option <?= ($this->id_grupo == $value['id_grupo']) ? "selected" : "" ?> value="<?= $value['id_grupo'] ?>"><?= $value['nome'] ?></option>
-             <? endforeach; ?>
-         </select>
-     <? endif; ?>
+     <div class="mr-4"></div>
+     <select class="form-control" id="id_grupo">
+         <? if (count($this->grupos) > 0) foreach ($this->grupos as $value): ?>
+             <option <?= ($this->id_grupo == $value['id_grupo']) ? "selected" : "" ?> value="<?= $value['id_grupo'] ?>"><?= $value['nome'] ?></option>
+         <? endforeach; ?>
+     </select>
  </div>
 
  <main class="col-sm-12 col-md-12 m-0">
@@ -27,21 +24,15 @@
 
  <script type="text/javascript">
      $(document).ready(function() {
-         var id_grupo = <?= $this->id_grupo ?>;
 
-         <? if ($this->permissao <= 2): ?>
-             $("#id_grupo").select2({
-                width:"100%",
-                 language: "pt-BR",
-                 theme: 'bootstrap4'
-             }).on('change', function() {
-                 id_grupo = $(this).val();
-                 carregarTela('../../avaliacao/membros?id_grupo=' + id_grupo, "#content-secundario");
-             });
-         <? endif; ?>
-
-        if(id_grupo)
-            carregarTela('../../avaliacao/membros?id_grupo=' + id_grupo, "#content-secundario");
+         $("#id_grupo").select2({
+             width: "100%",
+             language: "pt-BR",
+             theme: 'bootstrap4'
+         }).on('change', function() {
+             id_grupo = $(this).val();
+             carregarTela('../../avaliacao/membros?id_grupo=' + id_grupo, "#content-secundario");
+         }).trigger('change');
 
      });
  </script>

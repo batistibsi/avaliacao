@@ -19,11 +19,14 @@ class Grupo
                 return false;
         }
 
-        public static function gerente($id_usuario)
+        public static function isGerente($id_usuario, $id_grupo)
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select a.id_grupo from avaliacao_grupo a where a.id_usuario = " . $id_usuario;
+                $select = "select a.id_grupo 
+                        from avaliacao_grupo a
+                        where a.id_usuario = " . $id_usuario . " 
+                        and a.id_grupo = " . $id_grupo;
 
                 $registros = $db->fetchAll($select);
 
@@ -55,7 +58,7 @@ class Grupo
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select * from avaliacao_grupo where id_grupo <> " . $id_grupo . " and nome = '" . $nome . "'";
+                $select = "select * from avaliacao_grupo where ativo and id_grupo <> " . $id_grupo . " and nome = '" . $nome . "'";
 
                 $registros = $db->fetchAll($select);
 
@@ -73,7 +76,7 @@ class Grupo
                 }
 
                 if (!self::uniqueNome(0, $nome)) {
-                        Usuario::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
+                        self::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
                         return false;
                 }
 
@@ -115,7 +118,7 @@ class Grupo
                 }
 
                 if (!self::uniqueNome($id_grupo, $nome)) {
-                        Usuario::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
+                        self::$erro = 'Já existe um registro com o nome: ' . $nome . '.';
                         return false;
                 }
 
@@ -146,17 +149,17 @@ class Grupo
         }
 
         public static function desativar($id_grupo)
-	{
-		$db = Zend_Registry::get('db');
+        {
+                $db = Zend_Registry::get('db');
 
-		$data = array(
-			"ativo" => false
-		);
+                $data = array(
+                        "ativo" => false
+                );
 
-		$db->update("avaliacao_grupo", $data, "id_grupo = " . $id_grupo);
+                $db->update("avaliacao_grupo", $data, "id_grupo = " . $id_grupo);
 
-		return true;
-	}
+                return true;
+        }
 
 
 
@@ -164,7 +167,9 @@ class Grupo
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select a.* from avaliacao_grupo a where a.ativo order by a.nome";
+                $where = Zend_Registry::get('permissao') > 1 ? " and a.id_usuario = " . Zend_Registry::get('id_usuario') : "";
+
+                $select = "select a.* from avaliacao_grupo a where a.ativo " . $where . " order by a.nome";
 
                 $retorno = $db->fetchAll($select);
 

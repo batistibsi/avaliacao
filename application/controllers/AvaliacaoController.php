@@ -11,15 +11,14 @@ class AvaliacaoController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$id_grupo = Zend_Registry::get('permissao') > 1 ? Grupo::gerente(Zend_Registry::get('id_usuario')) : 0;
+		$grupos = Grupo::lista();
 
-		if (Zend_Registry::get('permissao') > 1 && !$id_grupo) {
-			die('Gerente sem grupo definido');
+		if (!count($grupos)) {
+			die('Sem grupo definido');
 		}
 
-		$this->view->grupos = $id_grupo ? false : Grupo::lista();
-
-		$this->view->id_grupo = $id_grupo;
+		$this->view->grupos = $grupos;
+		$this->view->id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
 	}
 
 	public function membrosAction()
@@ -29,10 +28,12 @@ class AvaliacaoController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
+		$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
+
 		if (Zend_Registry::get('permissao') > 1) {
-			$id_grupo = Grupo::gerente(Zend_Registry::get('id_usuario'));
-		} else {
-			$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
+			if (!Grupo::isGerente(Zend_Registry::get('id_usuario'), $id_grupo)) {
+				die('Não permitido');
+			}
 		}
 
 		if (!$id_grupo) {
@@ -102,7 +103,7 @@ class AvaliacaoController extends Zend_Controller_Action
 		$campos['id_avaliador'] = Zend_Registry::get('id_usuario');
 		$campos['data_envio'] = date('Y-m-d H:i:s');
 
-		$respostas = !empty($_REQUEST['itens'])?$_REQUEST['itens']:[];
+		$respostas = !empty($_REQUEST['itens']) ? $_REQUEST['itens'] : [];
 
 		$result = Envio::insert($campos, $respostas);
 

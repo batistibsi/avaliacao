@@ -677,9 +677,9 @@
 
       // monta FormData
       var fd = new FormData();
-      fd.append('id_usuario', <?=$this->usuario['id_usuario']?>);
-      fd.append('id_grupo', <?=$this->grupo['id_grupo']?>);
-      fd.append('id_formulario', <?=$this->formulario['id_formulario']?>);
+      fd.append('id_usuario', <?= $this->usuario['id_usuario'] ?>);
+      fd.append('id_grupo', <?= $this->grupo['id_grupo'] ?>);
+      fd.append('id_formulario', <?= $this->formulario['id_formulario'] ?>);
 
       // notas + comentários
       $('.question').each(function() {
@@ -724,7 +724,7 @@
             timer: 1,
             showConfirmButton: false
           }, function() {
-            carregarTela('../../avaliacao');
+            carregarTela('../../avaliacao?id_grupo=<?= $this->grupo['id_grupo'] ?>');
             setTimeout(function() {
               swal.close();
             }, 2000);
