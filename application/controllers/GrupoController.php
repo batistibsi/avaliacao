@@ -47,7 +47,7 @@ class GrupoController extends Zend_Controller_Action
 
 		$id_grupo = (int) $_REQUEST["id"];
 
-		$result = Grupo::delete($id_grupo);
+		$result = Grupo::desativar($id_grupo);
 
 		if (!$result) echo Grupo::$erro;
 	}

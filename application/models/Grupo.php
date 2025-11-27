@@ -145,19 +145,26 @@ class Grupo
                 return true;
         }
 
-        public static function delete($id_grupo)
-        {
-                $db = Zend_Registry::get('db');
+        public static function desativar($id_grupo)
+	{
+		$db = Zend_Registry::get('db');
 
-                $db->delete("avaliacao_grupo", "id_grupo = " . $id_grupo);
-        }
+		$data = array(
+			"ativo" => false
+		);
+
+		$db->update("avaliacao_grupo", $data, "id_grupo = " . $id_grupo);
+
+		return true;
+	}
+
 
 
         public static function lista()
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select a.* from avaliacao_grupo a order by a.nome";
+                $select = "select a.* from avaliacao_grupo a where a.ativo order by a.nome";
 
                 $retorno = $db->fetchAll($select);
 

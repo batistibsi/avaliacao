@@ -163,19 +163,25 @@ class Formulario
                 return true;
         }
 
-        public static function delete($id_formulario)
-        {
-                $db = Zend_Registry::get('db');
+        public static function desativar($id_formulario)
+	{
+		$db = Zend_Registry::get('db');
 
-                $db->delete("avaliacao_formulario", "id_formulario = " . $id_formulario);
-        }
+		$data = array(
+			"ativo" => false
+		);
+
+		$db->update("avaliacao_formulario", $data, "id_formulario = " . $id_formulario);
+
+		return true;
+	}
 
 
         public static function lista()
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select a.* from avaliacao_formulario a order by a.nome";
+                $select = "select a.* from avaliacao_formulario a where a.ativo order by a.nome";
 
                 $retorno = $db->fetchAll($select);
 

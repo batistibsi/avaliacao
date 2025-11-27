@@ -44,7 +44,7 @@ class FormularioController extends Zend_Controller_Action
 
 		$id_formulario = (int) $_REQUEST["id"];
 
-		$result = Formulario::delete($id_formulario);
+		$result = Formulario::desativar($id_formulario);
 
 		if (!$result) echo Formulario::$erro;
 	}
