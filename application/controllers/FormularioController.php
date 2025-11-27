@@ -1,6 +1,6 @@
 ﻿<?php
 
-//if (Zend_Registry::get('permissao') > 2) exit();
+if (Zend_Registry::get('permissao') != 1) exit();
 
 class FormularioController extends Zend_Controller_Action
 {

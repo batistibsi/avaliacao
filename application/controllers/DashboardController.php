@@ -1,8 +1,6 @@
 <?php
 
-if(!isset($_GET['ajax'])){
-	Util::gotoIndex();
-}
+if (Zend_Registry::get('permissao') > 2) exit();
 
 class DashboardController extends Zend_Controller_Action
 {

@@ -94,6 +94,7 @@
     <nav class="sidebar active">
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
+          <? if ($this->permissao <= 2): ?>
           <li class="nav-item">
             <a href="#" class="principal-link nav-link" data-menu-item="dashboard" data-src="../../dashboard">
               <i class="fa fa-line-chart" aria-hidden="true"></i>
@@ -106,6 +107,7 @@
               Avaliação
             </a>
           </li>
+          <? endif; ?>
           <? if ($this->permissao == 1): ?>
             <li class="nav-item">
               <a href="#" class="principal-link nav-link" data-menu-item="grupo" data-src="../../grupo">

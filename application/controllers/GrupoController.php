@@ -1,6 +1,6 @@
 ﻿<?php
 
-//if (Zend_Registry::get('permissao') > 2) exit();
+if (Zend_Registry::get('permissao') != 1) exit();
 
 class GrupoController extends Zend_Controller_Action
 {

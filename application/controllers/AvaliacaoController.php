@@ -1,4 +1,5 @@
 <?php
+if (Zend_Registry::get('permissao') > 2) exit();
 
 class AvaliacaoController extends Zend_Controller_Action
 {
