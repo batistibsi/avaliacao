@@ -9,10 +9,9 @@
         <div class="mr-2 mb-2">
             <label class="small mb-1 font-weight-bold">Grupo</label>
             <select id="filtroGrupoColetivo" class="form-control form-control-sm">
-                <option value="todos">Todos</option>
-                <option value="1">Atendimento</option>
-                <option value="2">Desenvolvimento</option>
-                <option value="3">Comercial</option>
+                <?php foreach ($this->grupos as $value): ?>
+                    <option <?= ($this->id_grupo == $value['id_grupo']) ? "selected" : "" ?> value="<?= $value['id_grupo'] ?>"><?= $value['nome'] ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
     </div>
@@ -21,13 +20,16 @@
 <div id="content-terciario"></div>
 
 <script type="text/javascript">
-  $(document).ready(function() {
+    $(document).ready(function() {
 
-    $('#filtroGrupoColetivo').on('change', function() {
-      carregarTela('../../dashboard/grupodetalhe', '#content-terciario');
+        $('#filtroGrupoColetivo').select2({
+                width: '100%',
+                language: "pt-BR",
+                theme: 'bootstrap4'
+            }).on('change', function() {
+                carregarTela('../../dashboard/grupodetalhe', '#content-terciario');
+            })
+            .trigger('change');
+
     });
-
-    carregarTela('../../dashboard/grupodetalhe', '#content-terciario');
-
-  });
 </script>

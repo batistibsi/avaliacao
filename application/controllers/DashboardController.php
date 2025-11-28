@@ -23,6 +23,14 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
+		$grupos = Grupo::lista();
+
+		if (!count($grupos)) {
+			die('Sem grupo definido');
+		}
+
+		$this->view->grupos = $grupos;
+		$this->view->id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
 		
 	}
 
@@ -47,6 +55,14 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
+		$usuarios = Grupo::lista();
+
+		if (!count($usuarios)) {
+			die('Sem usuário definido');
+		}
+
+		$this->view->usuarios = $usuarios;
+		$this->view->id_usuario = isset($_REQUEST["id_usuario"]) ? (int)  $_REQUEST["id_usuario"] : 0;
 
 	}
 

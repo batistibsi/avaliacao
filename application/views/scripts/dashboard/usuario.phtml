@@ -10,9 +10,9 @@
     <div class="mr-2 mb-2">
       <label class="small mb-1 font-weight-bold mb-0">Colaborador</label>
       <select id="filtroColaboradorIndividual" class="form-control form-control-sm">
-        <option value="101">Ana Silva</option>
-        <option value="102">Bruno Costa</option>
-        <option value="103">Carla Mendes</option>
+        <?php foreach ($this->usuarios as $value): ?>
+          <option <?= ($this->id_usuario == $value['id_usuario']) ? "selected" : "" ?> value="<?= $value['id_usuario'] ?>"><?= $value['nome'] ?></option>
+        <?php endforeach; ?>
       </select>
     </div>
   </div>
@@ -20,14 +20,17 @@
 
 <div id="content-terciario"></div>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
+<script type="text/javascript">
+  $(document).ready(function() {
 
-      $('#filtroColaboradorIndividual').on('change', function() {
+    $('#filtroColaboradorIndividual').select2({
+        width: '100%',
+        language: "pt-BR",
+        theme: 'bootstrap4'
+      }).on('change', function() {
         carregarTela('../../dashboard/usuariodetalhe', '#content-terciario');
-      });
+      })
+      .trigger('change');
 
-      carregarTela('../../dashboard/usuariodetalhe', '#content-terciario');
-
-    });
-  </script>
+  });
+</script>
