@@ -231,12 +231,27 @@ class Usuario
 
 		$db = Zend_Registry::get('db');
 
-		$select = "select avaliacao_usuario.*,
+		if (Zend_Registry::get('permissao') == 1) {
+
+			$select = "select avaliacao_usuario.*,
 					avaliacao_perfil.descricao as descricao_perfil
 				  from avaliacao_usuario
 				  left join avaliacao_perfil on avaliacao_usuario.id_perfil = avaliacao_perfil.id_perfil
 				   where avaliacao_usuario.ativo and avaliacao_perfil.id_perfil in(" . $id_perfil . ") and avaliacao_usuario.id_usuario <> 1
 				  order by avaliacao_usuario.nome";
+
+		} else {
+
+			$select = "select a.*,
+					p.descricao as descricao_perfil
+				  from avaliacao_usuario a
+				  inner join avaliacao_perfil p on p.id_perfil = a.id_perfil
+				  inner join avaliacao_grupo_usuario gu on a.id_usuario = gu.id_usuario
+				  inner join avaliacao_grupo g on gu.id_grupo = g.id_grupo
+				   where a.ativo and g.id_usuario = " . Zend_Registry::get('id_usuario') . "
+				  order by a.nome";
+
+		}
 
 		$retorno = $db->fetchAll($select);
 
