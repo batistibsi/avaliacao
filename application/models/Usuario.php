@@ -248,7 +248,9 @@ class Usuario
 				  inner join avaliacao_perfil p on p.id_perfil = a.id_perfil
 				  inner join avaliacao_grupo_usuario gu on a.id_usuario = gu.id_usuario
 				  inner join avaliacao_grupo g on gu.id_grupo = g.id_grupo
-				   where a.ativo and g.id_usuario = " . Zend_Registry::get('id_usuario') . "
+				  where a.ativo 
+				   and g.id_usuario = " . Zend_Registry::get('id_usuario') . "
+				   and a.id_perfil in(" . $id_perfil . ")
 				  order by a.nome";
 
 		}

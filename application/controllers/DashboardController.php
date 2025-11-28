@@ -69,7 +69,7 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$usuarios = Usuario::lista();
+		$usuarios = Usuario::lista('3');
 
 		if (!count($usuarios)) {
 			die('Sem usuário definido');
