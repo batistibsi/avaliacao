@@ -27,7 +27,8 @@
                 language: "pt-BR",
                 theme: 'bootstrap4'
             }).on('change', function() {
-                carregarTela('../../dashboard/grupodetalhe', '#content-terciario');
+                id_grupo = $(this).val();
+                carregarTela('../../dashboard/grupodetalhe?id_grupo=' + id_grupo, '#content-terciario');
             })
             .trigger('change');
 

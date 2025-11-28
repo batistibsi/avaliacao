@@ -42,6 +42,20 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
+		$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
+
+		if (Zend_Registry::get('permissao') > 1) {
+			if (!Grupo::isGerente(Zend_Registry::get('id_usuario'), $id_grupo)) {
+				die('Não permitido');
+			}
+		}
+
+		if (!$id_grupo) {
+			die('Grupo indefinido');
+		}
+
+		$this->view->grupo = Grupo::buscaId($id_grupo);
+
 		
 	}
 
@@ -55,7 +69,7 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$usuarios = Grupo::lista();
+		$usuarios = Usuario::lista();
 
 		if (!count($usuarios)) {
 			die('Sem usuário definido');
@@ -76,6 +90,19 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
+		$id_usuario = isset($_REQUEST["id_usuario"]) ? (int)  $_REQUEST["id_usuario"] : 0;
+
+		if (Zend_Registry::get('permissao') > 1) {
+			if (!Grupo::isGerenteDe(Zend_Registry::get('id_usuario'), $id_usuario)) {
+				die('Não permitido');
+			}
+		}
+
+		if (!$id_usuario) {
+			die('Usuário indefinido');
+		}
+
+		$this->view->usuario = Usuario::buscaId($id_usuario);
 
 	}
 }

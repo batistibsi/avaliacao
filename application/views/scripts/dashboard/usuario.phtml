@@ -28,7 +28,8 @@
         language: "pt-BR",
         theme: 'bootstrap4'
       }).on('change', function() {
-        carregarTela('../../dashboard/usuariodetalhe', '#content-terciario');
+        id_usuario = $(this).val();
+        carregarTela('../../dashboard/usuariodetalhe?id_usuario=' + id_usuario, '#content-terciario');
       })
       .trigger('change');
 

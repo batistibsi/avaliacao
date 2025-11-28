@@ -31,7 +31,27 @@ class Grupo
                 $registros = $db->fetchAll($select);
 
                 if (count($registros)) {
-                        return $registros[0]['id_grupo'];
+                        return true;
+                }
+
+                self::$erro = "Registro não encontrado!";
+                return false;
+        }
+
+        public static function isGerenteDe($id_usuario, $id_membro)
+        {
+                $db = Zend_Registry::get('db');
+
+                $select = "select b.id_usuario 
+                        from avaliacao_grupo a
+                        inner join avaliacao_grupo_usuario b on a.id_grupo = b.id_grupo
+                        where a.id_usuario = " . $id_usuario . " 
+                        and b.id_usuario = " . $id_membro;
+
+                $registros = $db->fetchAll($select);
+
+                if (count($registros)) {
+                        return true;
                 }
 
                 self::$erro = "Registro não encontrado!";
