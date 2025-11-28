@@ -90,14 +90,22 @@
             <thead class="thead-light">
               <tr>
                 <th>Data</th>
-                <th>Dimensão</th>
-                <th>Pergunta</th>
-                <th class="text-center">Nota</th>
+                <th>Grupo</th>
+                <th>Formulário</th>
+                <th>Nota</th>
                 <th>Gerente</th>
               </tr>
             </thead>
             <tbody>
-              <!-- preenchido via JS -->
+              <?php if (count($this->envios)) foreach ($this->envios as $envio): ?>
+                <tr>
+                  <td><?= Util::formatData($envio['data_envio']) ?></td>
+                  <td><?= $envio['grupo'] ?></td>
+                  <td><?= $envio['formulario'] ?></td>
+                  <td><?= $envio['nota'] ?></td>
+                  <td><?= $envio['avaliador'] ?></td>
+                </tr>
+              <?php endforeach; ?>
             </tbody>
           </table>
         </div>

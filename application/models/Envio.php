@@ -19,6 +19,17 @@ class Envio
                 return false;
         }
 
+        public static function buscaRespostas($id_envio)
+        {
+                $db = Zend_Registry::get('db');
+
+                $select = "select a.* from avaliacao_resposta a where a.id_envio = " . $id_envio;
+
+                $registros = $db->fetchAll($select);
+
+                return $registros;
+        }
+
         public static function normalizePerguntasFiles($root)
         {
                 $result = [];
@@ -224,13 +235,46 @@ class Envio
                 return true;
         }
 
-        public static function lista()
+        public static function buscaNota($id_envio)
+        {
+
+                $respostas = self::buscaRespostas($id_envio);
+
+                $nota = 0;
+
+                if (count($respostas)) {
+                        foreach ($respostas as $key => $value) {
+                                $nota += ((int)$value['resposta'] * (int)$value['peso']);
+                        }
+                }
+
+                return $nota;
+        }
+
+        public static function lista($id_usuario = false)
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select a.* from avaliacao_envio a order by a.nome";
+                $where = $id_usuario ? " where a.id_usuario = " . $id_usuario . " " : "";
+
+                $select = "select a.*,
+                                b.nome as formulario,
+                                c.nome as grupo,
+                                d.nome as avaliador
+                                from avaliacao_envio a 
+                                inner join avaliacao_formulario b on a.id_formulario = b.id_formulario
+                                inner join avaliacao_grupo c on a.id_grupo = c.id_grupo
+                                inner join avaliacao_usuario d on a.id_avaliador = d.id_usuario
+                                " . $where . " 
+                                order by a.data_envio";
 
                 $retorno = $db->fetchAll($select);
+
+                if (count($retorno)) {
+                        foreach ($retorno as $key => $value) {
+                                $retorno[$key]['nota'] = self::buscaNota($value['id_envio']);
+                        }
+                }
 
                 return $retorno;
         }

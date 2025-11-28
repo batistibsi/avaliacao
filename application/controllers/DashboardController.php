@@ -11,7 +11,6 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->usuario = Zend_Registry::get('usuario');
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
-
 	}
 
 
@@ -31,7 +30,6 @@ class DashboardController extends Zend_Controller_Action
 
 		$this->view->grupos = $grupos;
 		$this->view->id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
-		
 	}
 
 	public function grupodetalheAction()
@@ -55,8 +53,6 @@ class DashboardController extends Zend_Controller_Action
 		}
 
 		$this->view->grupo = Grupo::buscaId($id_grupo);
-
-		
 	}
 
 	public function usuarioAction()
@@ -77,7 +73,6 @@ class DashboardController extends Zend_Controller_Action
 
 		$this->view->usuarios = $usuarios;
 		$this->view->id_usuario = isset($_REQUEST["id_usuario"]) ? (int)  $_REQUEST["id_usuario"] : 0;
-
 	}
 
 	public function usuariodetalheAction()
@@ -104,5 +99,6 @@ class DashboardController extends Zend_Controller_Action
 
 		$this->view->usuario = Usuario::buscaId($id_usuario);
 
+		$this->view->envios = Envio::lista($id_usuario);
 	}
 }
