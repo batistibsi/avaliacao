@@ -12,19 +12,6 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$inicio = !empty($_REQUEST['inicio']) ? $_REQUEST['inicio'] : 'first day of this month';
-		$fim = !empty($_REQUEST['fim']) ? $_REQUEST['fim'] : 'last day of this month';
-
-		$dtInicio = new DateTime($inicio);
-		$inicio = $dtInicio->format('Y-m-d');
-
-		$dtFim = new DateTime($fim);
-		$fim = $dtFim->format('Y-m-d');
-
-
-		$this->view->inicio = $inicio;
-		$this->view->fim = $fim;
-
 	}
 
 
@@ -36,19 +23,18 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$inicio = !empty($_REQUEST['inicio']) ? $_REQUEST['inicio'] : 'first day of this month';
-		$fim = !empty($_REQUEST['fim']) ? $_REQUEST['fim'] : 'last day of this month';
+		
+	}
 
-		$dtInicio = new DateTime($inicio);
-		$inicio = $dtInicio->format('Y-m-d');
+	public function grupodetalheAction()
+	{
 
-		$dtFim = new DateTime($fim);
-		$fim = $dtFim->format('Y-m-d');
+		// Passando o usuário logado para a view
+		$this->view->usuario = Zend_Registry::get('usuario');
+		$this->view->idUsuario = Zend_Registry::get('id_usuario');
+		$this->view->permissao = Zend_Registry::get('permissao');
 
-
-		$this->view->inicio = $inicio;
-		$this->view->fim = $fim;
-
+		
 	}
 
 	public function usuarioAction()
@@ -61,18 +47,19 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$inicio = !empty($_REQUEST['inicio']) ? $_REQUEST['inicio'] : 'first day of this month';
-		$fim = !empty($_REQUEST['fim']) ? $_REQUEST['fim'] : 'last day of this month';
 
-		$dtInicio = new DateTime($inicio);
-		$inicio = $dtInicio->format('Y-m-d');
+	}
 
-		$dtFim = new DateTime($fim);
-		$fim = $dtFim->format('Y-m-d');
+	public function usuariodetalheAction()
+	{
+		$this->view->header = "header.phtml";
+		$this->view->footer = "footer.phtml";
 
+		// Passando o usuário logado para a view
+		$this->view->usuario = Zend_Registry::get('usuario');
+		$this->view->idUsuario = Zend_Registry::get('id_usuario');
+		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$this->view->inicio = $inicio;
-		$this->view->fim = $fim;
 
 	}
 }

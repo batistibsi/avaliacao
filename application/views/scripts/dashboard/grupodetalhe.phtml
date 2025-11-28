@@ -1,0 +1,294 @@
+<!-- ====================== DASHBOARD COLETIVO ====================== -->
+
+<!-- KPIs linha 1 -->
+<div class="row mb-3">
+    <div class="col-md-3 mb-3">
+        <div class="card card-kpi">
+            <div class="card-body">
+                <div class="card-kpi-title">Média geral</div>
+                <div class="card-kpi-value" id="kpiMediaGeralColetivo">--</div>
+                <div class="small text-muted">Notas de 0 a 10 no período selecionado.</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card card-kpi">
+            <div class="card-body">
+                <div class="card-kpi-title">Grupo destaque</div>
+                <div class="card-kpi-value" id="kpiMelhorGrupo">--</div>
+                <div class="small text-muted">
+                    <span class="badge badge-soft" id="kpiMelhorGrupoNome">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card card-kpi">
+            <div class="card-body">
+                <div class="card-kpi-title">Grupo crítico</div>
+                <div class="card-kpi-value" id="kpiPiorGrupo">--</div>
+                <div class="small text-muted">
+                    <span class="badge badge-soft" id="kpiPiorGrupoNome">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card card-kpi">
+            <div class="card-body">
+                <div class="card-kpi-title">Avaliações no período</div>
+                <div class="card-kpi-value" id="kpiQtdAvaliacoes">--</div>
+                <div class="small text-muted">Total de avaliações registradas.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Linha de gráficos -->
+<div class="row">
+    <!-- Média por grupo -->
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <div class="card-header py-2">
+                <strong>Média por grupo</strong>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="chartMediaPorGrupo"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Média por dimensão -->
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <div class="card-header py-2">
+                <strong>Média por dimensão</strong>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="chartMediaPorDimensao"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Evolução no tempo -->
+<div class="row">
+    <div class="col-12 mb-3">
+        <div class="card">
+            <div class="card-header py-2">
+                <strong>Evolução da média geral</strong> <span class="small text-muted">(por mês)</span>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="chartEvolucaoGeral"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function() {
+
+        /* ===================== DADOS DE EXEMPLO (troque por PHP) ===================== */
+
+        // Coletivo – exemplo (aqui você injeta dados reais do PostgreSQL)
+        var dadosColetivo = {
+            kpis: {
+                mediaGeral: 7.8,
+                melhorGrupo: {
+                    nome: 'Desenvolvimento',
+                    media: 8.6
+                },
+                piorGrupo: {
+                    nome: 'Atendimento',
+                    media: 7.1
+                },
+                qtdAvaliacoes: 123
+            },
+            mediaPorGrupo: {
+                labels: ['Atendimento', 'Desenvolvimento', 'Comercial'],
+                valores: [7.1, 8.6, 7.9]
+            },
+            mediaPorDimensao: {
+                labels: ['Desempenho', 'Responsabilidade', 'Comunicação', 'Liderança'],
+                valores: [8.0, 7.5, 8.2, 7.4]
+            },
+            evolucaoGeral: {
+                labels: ['2025-01', '2025-02', '2025-03', '2025-04'],
+                valores: [7.2, 7.6, 7.9, 8.1]
+            }
+        };
+
+        /* ========================= CHARTS – INSTÂNCIAS ========================= */
+
+        var chartMediaPorGrupo, chartMediaPorDimensao, chartEvolucaoGeral;
+        var chartRadarDimensoes, chartEvolucaoIndividual;
+
+        // Config padrão
+        var chartOptionsBase = {
+            legend: {
+                display: true
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        };
+
+        function criarChartMediaPorGrupo() {
+            var ctx = document.getElementById('chartMediaPorGrupo').getContext('2d');
+            chartMediaPorGrupo = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dadosColetivo.mediaPorGrupo.labels,
+                    datasets: [{
+                        label: 'Média por grupo',
+                        data: dadosColetivo.mediaPorGrupo.valores,
+                        backgroundColor: 'rgba(59,130,246,0.4)',
+                        borderColor: 'rgba(59,130,246,1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: $.extend(true, {}, chartOptionsBase, {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 10,
+                                stepSize: 1
+                            }
+                        }]
+                    }
+                })
+            });
+        }
+
+        function criarChartMediaPorDimensao() {
+            var ctx = document.getElementById('chartMediaPorDimensao').getContext('2d');
+            chartMediaPorDimensao = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: dadosColetivo.mediaPorDimensao.labels,
+                    datasets: [{
+                        label: 'Média',
+                        data: dadosColetivo.mediaPorDimensao.valores,
+                        backgroundColor: 'rgba(16,185,129,0.4)',
+                        borderColor: 'rgba(16,185,129,1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: $.extend(true, {}, chartOptionsBase, {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 10,
+                                stepSize: 1
+                            }
+                        }]
+                    }
+                })
+            });
+        }
+
+        function criarChartEvolucaoGeral() {
+            var ctx = document.getElementById('chartEvolucaoGeral').getContext('2d');
+            chartEvolucaoGeral = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dadosColetivo.evolucaoGeral.labels,
+                    datasets: [{
+                        label: 'Média geral',
+                        data: dadosColetivo.evolucaoGeral.valores,
+                        fill: false,
+                        borderColor: 'rgba(96,165,250,1)',
+                        borderWidth: 2,
+                        pointRadius: 3
+                    }]
+                },
+                options: $.extend(true, {}, chartOptionsBase, {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 10,
+                                stepSize: 1
+                            }
+                        }]
+                    }
+                })
+            });
+        }
+
+        function criarChartRadarDimensoes(dados) {
+            var ctx = document.getElementById('chartRadarDimensoes').getContext('2d');
+            chartRadarDimensoes = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: dados.dimensoes.labels,
+                    datasets: [{
+                            label: 'Colaborador',
+                            data: dados.dimensoes.colab,
+                            backgroundColor: 'rgba(59,130,246,0.2)',
+                            borderColor: 'rgba(59,130,246,1)',
+                            pointBackgroundColor: 'rgba(59,130,246,1)'
+                        },
+                        {
+                            label: 'Grupo',
+                            data: dados.dimensoes.grupo,
+                            backgroundColor: 'rgba(16,185,129,0.2)',
+                            borderColor: 'rgba(16,185,129,1)',
+                            pointBackgroundColor: 'rgba(16,185,129,1)'
+                        }
+                    ]
+                },
+                options: $.extend(true, {}, chartOptionsBase, {
+                    scale: {
+                        ticks: {
+                            min: 0,
+                            max: 10,
+                            stepSize: 1
+                        }
+                    }
+                })
+            });
+        }
+
+        /* ========================= COLETIVO – INICIALIZAÇÃO ========================= */
+
+        function atualizarKpisColetivo() {
+            $('#kpiMediaGeralColetivo').text(dadosColetivo.kpis.mediaGeral.toFixed(1));
+            $('#kpiMelhorGrupo').text(dadosColetivo.kpis.melhorGrupo.media.toFixed(1));
+            $('#kpiMelhorGrupoNome').text(dadosColetivo.kpis.melhorGrupo.nome);
+            $('#kpiPiorGrupo').text(dadosColetivo.kpis.piorGrupo.media.toFixed(1));
+            $('#kpiPiorGrupoNome').text(dadosColetivo.kpis.piorGrupo.nome);
+            $('#kpiQtdAvaliacoes').text(dadosColetivo.kpis.qtdAvaliacoes);
+        }
+
+        function initDashboardColetivo() {
+            atualizarKpisColetivo();
+            criarChartMediaPorGrupo();
+            criarChartMediaPorDimensao();
+            criarChartEvolucaoGeral();
+        }
+
+        // Filtros – aqui você chamaria AJAX para recarregar dadosColetivo
+        /*$('#filtroPeriodoColetivo, #filtroGrupoColetivo').on('change', function() {
+            // Em produção:
+            // 1) Faz $.getJSON('/api/dashboard/coletivo', { periodo: ..., grupo: ... })
+            // 2) Atualiza dadosColetivo
+            // 3) chama atualizarKpisColetivo() + atualiza os dados dos charts
+            console.log('Troca de filtro coletivo (mock)');
+        });*/
+
+        /* ======================== INICIALIZAÇÃO GERAL ======================== */
+
+        // Coletivo logo ao carregar
+        initDashboardColetivo();
+
+    });
+</script>
