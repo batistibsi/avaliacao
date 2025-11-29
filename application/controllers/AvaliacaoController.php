@@ -21,6 +21,29 @@ class AvaliacaoController extends Zend_Controller_Action
 		$this->view->id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
 	}
 
+
+	public function detalheAction()
+	{
+		// Passando o usuário logado para a view
+		$this->view->usuario = Zend_Registry::get('usuario');
+		$this->view->idUsuario = Zend_Registry::get('id_usuario');
+		$this->view->permissao = Zend_Registry::get('permissao');
+
+		$id_envio = isset($_REQUEST["id_envio"]) ? (int)  $_REQUEST["id_envio"] : 0;
+
+		if (!$id_envio) {
+			die('Envio indefinido');
+		}
+
+		$envio = Envio::buscaId($id_envio);
+
+		if (!$envio) {
+			die('Envio não encontrado');
+		}
+
+		$this->view->envio = $envio;
+	}
+
 	public function membrosAction()
 	{
 		// Passando o usuário logado para a view

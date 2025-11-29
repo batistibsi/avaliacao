@@ -7,25 +7,46 @@ class Envio
         {
                 $db = Zend_Registry::get('db');
 
-                $select = "select a.* from avaliacao_envio a where a.id_envio = " . $id_envio;
+                $where = Zend_Registry::get('permissao') > 1 ? " and a.id_avaliador = " . Zend_Registry::get('id_usuario') : "";
+
+                $select = "select a.* from avaliacao_envio a where a.id_envio = " . $id_envio . $where;
 
                 $registros = $db->fetchAll($select);
 
                 if (count($registros)) {
-                        return $registros[0];
+                        $envio = $registros[0];
+                        $envio['respostas'] = self::buscaRespostas($id_envio, true);
+                        return $envio;
                 }
 
                 self::$erro = "Registro não encontrado!";
                 return false;
         }
 
-        public static function buscaRespostas($id_envio)
+        public static function buscaArquivos($id_resposta)
+        {
+                $db = Zend_Registry::get('db');
+
+                $select = "select a.* from avaliacao_arquivo a where a.id_resposta = " . $id_resposta;
+
+                $registros = $db->fetchAll($select);
+
+                return $registros;
+        }
+
+        public static function buscaRespostas($id_envio, $arquivos = false)
         {
                 $db = Zend_Registry::get('db');
 
                 $select = "select a.* from avaliacao_resposta a where a.id_envio = " . $id_envio;
 
                 $registros = $db->fetchAll($select);
+
+                if (count($registros) && $arquivos) {
+                        foreach ($registros as $key => $value) {
+                                $registros[$key]['arquivos'] = self::buscaArquivos($value['id_resposta']);
+                        }
+                }
 
                 return $registros;
         }
@@ -256,6 +277,8 @@ class Envio
                 $db = Zend_Registry::get('db');
 
                 $where = $id_usuario ? " where a.id_usuario = " . $id_usuario . " " : "";
+                $where .= Zend_Registry::get('permissao') > 1 ? " and a.id_avaliador = " . Zend_Registry::get('id_usuario') : "";
+
 
                 $select = "select a.*,
                                 b.nome as formulario,
