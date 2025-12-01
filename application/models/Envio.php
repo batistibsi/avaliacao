@@ -9,7 +9,17 @@ class Envio
 
                 $where = Zend_Registry::get('permissao') > 1 ? " and a.id_avaliador = " . Zend_Registry::get('id_usuario') : "";
 
-                $select = "select a.* from avaliacao_envio a where a.id_envio = " . $id_envio . $where;
+                $select = "select a.*,
+                                b.nome as formulario,
+                                c.nome as grupo,
+                                d.nome as avaliador,
+                                e.nome as avaliado
+                                from avaliacao_envio a 
+                                inner join avaliacao_formulario b on a.id_formulario = b.id_formulario
+                                inner join avaliacao_grupo c on a.id_grupo = c.id_grupo
+                                inner join avaliacao_usuario d on a.id_avaliador = d.id_usuario
+                                inner join avaliacao_usuario e on a.id_usuario = e.id_usuario
+                                where a.id_envio = " . $id_envio . $where;
 
                 $registros = $db->fetchAll($select);
 

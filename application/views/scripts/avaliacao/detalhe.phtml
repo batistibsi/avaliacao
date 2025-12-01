@@ -34,11 +34,6 @@
          border-radius: .5rem;
      }
 
-     .titulo-bloco {
-         border-bottom: 1px solid #e5e7eb;
-         padding-bottom: .3rem;
-         margin-bottom: .7rem;
-     }
  </style>
 
  <div class="container my-4">
@@ -46,10 +41,9 @@
      <!-- Cabeçalho do envio -->
      <div class="card mb-4">
          <div class="card-body">
-             <h4 class="card-title mb-1">Avaliação #<?= htmlspecialchars($envio['id_envio']) ?></h4>
+             <h4 class="card-title mb-1"><?= htmlspecialchars($envio['formulario']) ?></h4>
              <h6 class="card-subtitle text-muted mb-3">
-                 Grupo: <?= htmlspecialchars($envio['id_grupo']) ?> ·
-                 Formulário: <?= htmlspecialchars($envio['id_formulario']) ?>
+                 Grupo: <?= htmlspecialchars($envio['grupo']) ?>
              </h6>
 
              <div class="row">
@@ -58,12 +52,12 @@
                      <?= htmlspecialchars($envio['data_envio']) ?>
                  </div>
                  <div class="col-md-4">
-                     <strong>Avaliador (id):</strong><br>
-                     <?= htmlspecialchars($envio['id_avaliador']) ?>
+                     <strong>Avaliador:</strong><br>
+                     <?= htmlspecialchars($envio['avaliador']) ?>
                  </div>
                  <div class="col-md-4">
-                     <strong>Avaliado (id usuário):</strong><br>
-                     <?= htmlspecialchars($envio['id_usuario']) ?>
+                     <strong>Avaliado:</strong><br>
+                     <?= htmlspecialchars($envio['avaliado']) ?>
                  </div>
              </div>
          </div>
@@ -72,9 +66,9 @@
      <!-- Blocos e perguntas -->
      <?php foreach ($blocos as $nomeBloco => $respostasDoBloco): ?>
          <div class="mb-4">
-             <h5 class="titulo-bloco">
-                 Bloco: <strong><?= htmlspecialchars($nomeBloco) ?></strong>
-             </h5>
+             <h3>
+                 <?= htmlspecialchars($nomeBloco) ?>
+             </h3>
 
              <?php foreach ($respostasDoBloco as $idx => $r): ?>
                  <div class="card card-pergunta mb-3">
