@@ -13,7 +13,9 @@
     {
         // Ajuste isso conforme sua estrutura (exemplo)
         // Se /var/www/avaliacao é o docroot:
-        return str_replace('/var/www/avaliacao', '', $caminho);
+        $arquivo =  str_replace('/var/www/avaliacao/uploads', '', $caminho);
+
+        return '../../download.php?arquivo=' . $arquivo;
     }
     ?>
 
@@ -33,7 +35,6 @@
          object-fit: cover;
          border-radius: .5rem;
      }
-
  </style>
 
  <div class="container my-4">
