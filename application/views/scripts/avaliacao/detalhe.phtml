@@ -8,6 +8,14 @@
         $blocos[$resp['bloco']][] = $resp;
     }
 
+    $legenda = [
+        '0' => 'Ruim',
+        '1' => 'Regular',
+        '2' => 'Bom',
+        '3' => 'Ótimo',
+    ];
+    //$textoResposta = $legenda[$r['resposta']] ?? $r['resposta'];
+
     // Função auxiliar para transformar caminho do arquivo em URL pública
     function caminhoParaUrl($caminho)
     {
@@ -80,11 +88,14 @@
                          </div>
                          <div>
                              <span class="badge badge-primary badge-nota">
-                                 Nota / Resposta: <?= htmlspecialchars($r['resposta']) ?>
+                                 Resposta: <?= htmlspecialchars($legenda[$r['resposta']]) ?>
                              </span>
                              <?php if (!empty($r['peso'])): ?>
                                  <span class="badge badge-light badge-nota">
                                      Peso: <?= htmlspecialchars($r['peso']) ?>
+                                 </span>
+                                 <span class="badge badge-light badge-nota">
+                                     Nota: <?= ($r['peso'] * $r['resposta'])  ?>
                                  </span>
                              <?php endif; ?>
                          </div>
