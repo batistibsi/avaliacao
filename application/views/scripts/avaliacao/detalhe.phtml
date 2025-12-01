@@ -1,13 +1,154 @@
- <main class="col-sm-12 col-md-12 m-0">
-     <h1>Detalhe envio</h1>
- </main>
+ <?php
+    // Exemplo: seu array vindo do banco / lógica anterior
+    $envio = $this->envio; // substitua aqui
 
- <pre>
-    <?php print_r($this->envio)?>
- </pre>
+    // Agrupar respostas por bloco
+    $blocos = [];
+    foreach ($envio['respostas'] as $resp) {
+        $blocos[$resp['bloco']][] = $resp;
+    }
+
+    // Função auxiliar para transformar caminho do arquivo em URL pública
+    function caminhoParaUrl($caminho)
+    {
+        // Ajuste isso conforme sua estrutura (exemplo)
+        // Se /var/www/avaliacao é o docroot:
+        return str_replace('/var/www/avaliacao', '', $caminho);
+    }
+    ?>
+
+ <style>
+     .card-pergunta {
+         border-radius: 0.75rem;
+         box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+     }
+
+     .badge-nota {
+         font-size: .85rem;
+     }
+
+     .thumb-anexo {
+         max-width: 100%;
+         max-height: 120px;
+         object-fit: cover;
+         border-radius: .5rem;
+     }
+
+     .titulo-bloco {
+         border-bottom: 1px solid #e5e7eb;
+         padding-bottom: .3rem;
+         margin-bottom: .7rem;
+     }
+ </style>
+
+ <div class="container my-4">
+
+     <!-- Cabeçalho do envio -->
+     <div class="card mb-4">
+         <div class="card-body">
+             <h4 class="card-title mb-1">Avaliação #<?= htmlspecialchars($envio['id_envio']) ?></h4>
+             <h6 class="card-subtitle text-muted mb-3">
+                 Grupo: <?= htmlspecialchars($envio['id_grupo']) ?> ·
+                 Formulário: <?= htmlspecialchars($envio['id_formulario']) ?>
+             </h6>
+
+             <div class="row">
+                 <div class="col-md-4">
+                     <strong>Data do envio:</strong><br>
+                     <?= htmlspecialchars($envio['data_envio']) ?>
+                 </div>
+                 <div class="col-md-4">
+                     <strong>Avaliador (id):</strong><br>
+                     <?= htmlspecialchars($envio['id_avaliador']) ?>
+                 </div>
+                 <div class="col-md-4">
+                     <strong>Avaliado (id usuário):</strong><br>
+                     <?= htmlspecialchars($envio['id_usuario']) ?>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+     <!-- Blocos e perguntas -->
+     <?php foreach ($blocos as $nomeBloco => $respostasDoBloco): ?>
+         <div class="mb-4">
+             <h5 class="titulo-bloco">
+                 Bloco: <strong><?= htmlspecialchars($nomeBloco) ?></strong>
+             </h5>
+
+             <?php foreach ($respostasDoBloco as $idx => $r): ?>
+                 <div class="card card-pergunta mb-3">
+                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                         <div>
+                             <span class="text-muted small">Pergunta <?= $idx + 1 ?></span><br>
+                             <strong><?= htmlspecialchars($r['pergunta']) ?></strong>
+                         </div>
+                         <div>
+                             <span class="badge badge-primary badge-nota">
+                                 Nota / Resposta: <?= htmlspecialchars($r['resposta']) ?>
+                             </span>
+                             <?php if (!empty($r['peso'])): ?>
+                                 <span class="badge badge-light badge-nota">
+                                     Peso: <?= htmlspecialchars($r['peso']) ?>
+                                 </span>
+                             <?php endif; ?>
+                         </div>
+                     </div>
+
+                     <div class="card-body">
+                         <!-- Observação -->
+                         <?php if (!empty($r['observacao'])): ?>
+                             <p class="mb-2">
+                                 <strong>Observação:</strong><br>
+                                 <?= nl2br(htmlspecialchars($r['observacao'])) ?>
+                             </p>
+                         <?php else: ?>
+                             <p class="mb-2 text-muted"><em>Sem observações.</em></p>
+                         <?php endif; ?>
+
+                         <!-- Anexos -->
+                         <?php if (!empty($r['arquivos'])): ?>
+                             <div class="mt-3">
+                                 <strong>Anexos:</strong>
+                                 <div class="row mt-2">
+                                     <?php foreach ($r['arquivos'] as $arq):
+                                            $url = caminhoParaUrl($arq['caminho_arquivo']);
+                                            $isImage = strpos($arq['mime_type'], 'image/') === 0;
+                                        ?>
+                                         <div class="col-6 col-md-3 mb-3 text-center">
+                                             <?php if ($isImage): ?>
+                                                 <a href="<?= htmlspecialchars($url) ?>" target="_blank" title="<?= htmlspecialchars($arq['nome_original']) ?>">
+                                                     <img src="<?= htmlspecialchars($url) ?>" class="thumb-anexo img-fluid border" alt="Anexo">
+                                                 </a>
+                                             <?php else: ?>
+                                                 <a href="<?= htmlspecialchars($url) ?>" target="_blank">
+                                                     <?= htmlspecialchars($arq['nome_original']) ?>
+                                                 </a>
+                                                 <div class="text-muted small">
+                                                     (<?= htmlspecialchars($arq['mime_type']) ?>)
+                                                 </div>
+                                             <?php endif; ?>
+                                         </div>
+                                     <?php endforeach; ?>
+                                 </div>
+                             </div>
+                         <?php else: ?>
+                             <p class="mt-2 text-muted"><em>Sem anexos.</em></p>
+                         <?php endif; ?>
+                     </div>
+                 </div>
+             <?php endforeach; ?>
+         </div>
+     <?php endforeach; ?>
+
+ </div>
+
+ </body>
+
+ </html>
 
  <script type="text/javascript">
      $(document).ready(function() {
-         
+
      });
  </script>
