@@ -27,6 +27,12 @@ class Usuario
 		}
 	}
 
+	public static function estatistica($inicio, $fim, $id_usuario){
+		$estatistica = [];
+
+		return $estatistica;		
+	}
+
 	public static function buscaEmail($email)
 	{
 

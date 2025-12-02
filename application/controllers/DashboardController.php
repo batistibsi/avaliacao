@@ -13,7 +13,6 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->permissao = Zend_Registry::get('permissao');
 	}
 
-
 	public function grupoAction()
 	{
 
@@ -43,9 +42,9 @@ class DashboardController extends Zend_Controller_Action
 		$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
 
 		$inicio = isset($_REQUEST['inicio']) ? $_REQUEST['inicio'] : false;
-        $fim = isset($_REQUEST['fim']) ? $_REQUEST['fim'] : false;
+		$fim = isset($_REQUEST['fim']) ? $_REQUEST['fim'] : false;
 
-		if(!$inicio || !$fim){
+		if (!$inicio || !$fim) {
 			die('Período inválido!');
 		}
 
@@ -59,7 +58,13 @@ class DashboardController extends Zend_Controller_Action
 			die('Grupo indefinido');
 		}
 
-		$this->view->grupo = Grupo::buscaId($id_grupo);
+		$grupo = Grupo::buscaId($id_grupo);
+
+		if (!$grupo) {
+			die(Grupo::$erro);
+		}
+
+		$this->view->grupo = $grupo;
 	}
 
 	public function usuarioAction()
@@ -95,9 +100,9 @@ class DashboardController extends Zend_Controller_Action
 		$id_usuario = isset($_REQUEST["id_usuario"]) ? (int)  $_REQUEST["id_usuario"] : 0;
 
 		$inicio = isset($_REQUEST['inicio']) ? $_REQUEST['inicio'] : false;
-        $fim = isset($_REQUEST['fim']) ? $_REQUEST['fim'] : false;
+		$fim = isset($_REQUEST['fim']) ? $_REQUEST['fim'] : false;
 
-		if(!$inicio || !$fim){
+		if (!$inicio || !$fim) {
 			die('Período inválido!');
 		}
 
@@ -111,7 +116,15 @@ class DashboardController extends Zend_Controller_Action
 			die('Usuário indefinido');
 		}
 
-		$this->view->usuario = Usuario::buscaId($id_usuario);
+		$usuario = Usuario::buscaId($id_usuario);
+
+		if (!$usuario) {
+			die(Usuario::$erro);
+		}
+
+		$this->view->usuario = $usuario;
+
+		$this->view->estatistica = Usuario::estatistica($inicio, $fim, $id_usuario);
 
 		$this->view->envios = Envio::lista($id_usuario);
 	}
