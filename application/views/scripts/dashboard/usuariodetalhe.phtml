@@ -366,17 +366,17 @@
 
     function carregarDashboardIndividual() {
       var id = $('#filtroColaboradorIndividual').val();
-      var dados = dadosIndividuais[id];
+      var dados = JSON.parse('<?= json_encode($this->estatistica) ?>');
       if (!dados) return;
 
-      preencherCabecalhoIndividual(dados);
+      //preencherCabecalhoIndividual(dados);
 
       // Destroi gráficos antigos se existirem
       if (chartRadarDimensoes) chartRadarDimensoes.destroy();
-      if (chartEvolucaoIndividual) chartEvolucaoIndividual.destroy();
+      //if (chartEvolucaoIndividual) chartEvolucaoIndividual.destroy();
 
       criarChartRadarDimensoes(dados);
-      criarChartEvolucaoIndividual(dados);
+      //criarChartEvolucaoIndividual(dados);
     }
 
     /*$('#filtroColaboradorIndividual, #filtroPeriodoIndividual').on('change', function() {

@@ -266,13 +266,14 @@ class Envio
                 return true;
         }
 
-        public static function lista($inicio, $fim, $id_usuario = false)
+        public static function lista($inicio, $fim, $id_grupo, $id_usuario)
         {
                 $db = Zend_Registry::get('db');
 
-                $where = " where a.data_envio between '" . $inicio . "' and '" . $fim . "' ";
+                $where = " where a.data_envio between '" . $inicio . " 00:00:00' and '" . $fim . " 23:59:59' ";
 
                 $where .= $id_usuario ? " and a.id_usuario = " . $id_usuario . " " : "";
+                $where .= $id_grupo ? " and a.id_grupo = " . $id_grupo . " " : "";
                 $where .= Zend_Registry::get('permissao') > 1 ? " and a.id_avaliador = " . Zend_Registry::get('id_usuario') : "";
 
                 $select = "select a.*,

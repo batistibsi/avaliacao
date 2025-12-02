@@ -8,7 +8,6 @@ class Usuario
 
 	public static function buscaId($id_usuario)
 	{
-
 		$db = Zend_Registry::get('db');
 
 		$select = "select a.*, b.*, c.nome as grupo
@@ -27,10 +26,60 @@ class Usuario
 		}
 	}
 
-	public static function estatistica($inicio, $fim, $id_usuario){
-		$estatistica = [];
+	public static function estatistica($inicio, $fim, $id_grupo, $id_usuario)
+	{
 
-		return $estatistica;		
+		$blocos = [];
+
+		$db = Zend_Registry::get('db');
+
+		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+			where b.id_grupo = " . $id_grupo . "
+			group by a.bloco;";
+
+		$registros = $db->fetchAll($select);
+
+		if (count($registros)) {
+			foreach ($registros as $key => $value) {
+				$blocos[$value['bloco']]['grupo'] = $value['total'];
+				$blocos[$value['bloco']]['usuario'] = 0;
+			}
+		}
+
+		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+			where b.id_usuario = " . $id_usuario . "
+			group by a.bloco;";
+
+		$registros = $db->fetchAll($select);
+
+		if (count($registros)) {
+			foreach ($registros as $key => $value) {
+				if (!isset($blocos[$value['bloco']])) {
+					$blocos[$value['bloco']]['grupo'] = 0;
+				}
+				$blocos[$value['bloco']]['usuario'] = $value['total'];
+			}
+		}
+
+		$dimensoes = [];
+
+		if (count($blocos)) {
+			foreach ($blocos as $key => $value) {
+				$dimensoes['labels'][] = $key;
+				$dimensoes['colab'][] = $value['usuario'];
+				$dimensoes['grupo'][] = $value['grupo'];
+			}
+		}
+
+		$estatistica = [
+			'dimensoes' => $dimensoes
+		];
+
+		return $estatistica;
 	}
 
 	public static function buscaEmail($email)
@@ -249,7 +298,6 @@ class Usuario
 				  left join avaliacao_perfil on avaliacao_usuario.id_perfil = avaliacao_perfil.id_perfil
 				   where avaliacao_usuario.ativo and avaliacao_perfil.id_perfil in(" . $id_perfil . ") and avaliacao_usuario.id_usuario <> 1
 				  order by avaliacao_usuario.nome";
-
 		} else {
 
 			$select = "select a.*,
@@ -262,7 +310,6 @@ class Usuario
 				   and g.id_usuario = " . Zend_Registry::get('id_usuario') . "
 				   and a.id_perfil in(" . $id_perfil . ")
 				  order by a.nome";
-
 		}
 
 		$retorno = $db->fetchAll($select);
