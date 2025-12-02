@@ -92,9 +92,39 @@ class Usuario
 			}
 		}
 
+		$select = "select avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+			where b.id_grupo = " . $id_grupo . ";";
+
+		$registros = $db->fetchAll($select);
+
+		if (count($registros)) {
+			foreach ($registros as $key => $value) {
+				$mediaColab = number_format($value['total'],1,',','.');
+			}
+		}
+
+		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+			where b.id_usuario = " . $id_usuario . "
+			group by a.bloco;";
+
+		$registros = $db->fetchAll($select);
+
+		if (count($registros)) {
+			foreach ($registros as $key => $value) {
+				$mediaGrupo = number_format($value['total'],1,',','.');
+			}
+		}
+
+
 		$estatistica = [
 			'dimensoes' => $dimensoes,
-			'evolucao' => $evolucao
+			'evolucao' => $evolucao,
+			'mediaColab' => $mediaColab,
+			'mediaGrupo' => $mediaGrupo
 		];
 
 		return $estatistica;

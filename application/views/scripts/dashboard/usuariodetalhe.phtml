@@ -357,11 +357,8 @@
     /* ======================== INDIVIDUAL – INICIALIZAÇÃO ======================== */
 
     function preencherCabecalhoIndividual(dados) {
-      $('#indColabNome').text(dados.nome);
-      $('#indColabIniciais').text(dados.iniciais);
-      $('#indColabGrupo').text('Grupo: ' + dados.grupo);
-      $('#indMediaColaborador').text(dados.mediaColab.toFixed(1));
-      $('#indMediaGrupo').text(dados.mediaGrupo.toFixed(1));
+      $('#indMediaColaborador').text(dados.mediaColab);
+      $('#indMediaGrupo').text(dados.mediaGrupo);
     }
 
     function carregarDashboardIndividual() {
@@ -369,7 +366,7 @@
       var dados = JSON.parse('<?= json_encode($this->estatistica) ?>');
       if (!dados) return;
 
-      //preencherCabecalhoIndividual(dados);
+      preencherCabecalhoIndividual(dados);
 
       // Destroi gráficos antigos se existirem
       if (chartRadarDimensoes) chartRadarDimensoes.destroy();
