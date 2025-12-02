@@ -92,6 +92,9 @@ class Usuario
 			}
 		}
 
+		$mediaColab = 0;
+		$mediaGrupo = 0;
+
 		$select = "select avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
