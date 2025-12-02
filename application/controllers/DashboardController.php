@@ -42,6 +42,13 @@ class DashboardController extends Zend_Controller_Action
 
 		$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
 
+		$inicio = isset($_REQUEST['inicio']) ? $_REQUEST['inicio'] : false;
+        $fim = isset($_REQUEST['fim']) ? $_REQUEST['fim'] : false;
+
+		if(!$inicio || !$fim){
+			die('Período inválido!');
+		}
+
 		if (Zend_Registry::get('permissao') > 1) {
 			if (!Grupo::isGerente(Zend_Registry::get('id_usuario'), $id_grupo)) {
 				die('Não permitido');
@@ -86,6 +93,13 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->permissao = Zend_Registry::get('permissao');
 
 		$id_usuario = isset($_REQUEST["id_usuario"]) ? (int)  $_REQUEST["id_usuario"] : 0;
+
+		$inicio = isset($_REQUEST['inicio']) ? $_REQUEST['inicio'] : false;
+        $fim = isset($_REQUEST['fim']) ? $_REQUEST['fim'] : false;
+
+		if(!$inicio || !$fim){
+			die('Período inválido!');
+		}
 
 		if (Zend_Registry::get('permissao') > 1) {
 			if (!Grupo::isGerenteDe(Zend_Registry::get('id_usuario'), $id_usuario)) {
