@@ -266,48 +266,33 @@ class Envio
                 return true;
         }
 
-        public static function buscaNota($id_envio)
-        {
-
-                $respostas = self::buscaRespostas($id_envio);
-
-                $nota = 0;
-
-                if (count($respostas)) {
-                        foreach ($respostas as $key => $value) {
-                                $nota += ((int)$value['resposta'] * (int)$value['peso']);
-                        }
-                }
-
-                return $nota;
-        }
-
-        public static function lista($id_usuario = false)
+        public static function lista($inicio, $fim, $id_usuario = false)
         {
                 $db = Zend_Registry::get('db');
 
-                $where = $id_usuario ? " where a.id_usuario = " . $id_usuario . " " : "";
-                $where .= Zend_Registry::get('permissao') > 1 ? " and a.id_avaliador = " . Zend_Registry::get('id_usuario') : "";
+                $where = " where a.data_envio between '" . $inicio . "' and '" . $fim . "' ";
 
+                $where .= $id_usuario ? " and a.id_usuario = " . $id_usuario . " " : "";
+                $where .= Zend_Registry::get('permissao') > 1 ? " and a.id_avaliador = " . Zend_Registry::get('id_usuario') : "";
 
                 $select = "select a.*,
                                 b.nome as formulario,
                                 c.nome as grupo,
-                                d.nome as avaliador
+                                d.nome as avaliador,
+                                e.nota
                                 from avaliacao_envio a 
                                 inner join avaliacao_formulario b on a.id_formulario = b.id_formulario
                                 inner join avaliacao_grupo c on a.id_grupo = c.id_grupo
                                 inner join avaliacao_usuario d on a.id_avaliador = d.id_usuario
+                                inner join (
+                                        select sum(resposta::integer * peso) as nota, id_envio
+                                        from avaliacao_resposta 
+                                        group by id_envio
+                                )e on a.id_envio = e.id_envio
                                 " . $where . " 
                                 order by a.data_envio";
 
                 $retorno = $db->fetchAll($select);
-
-                if (count($retorno)) {
-                        foreach ($retorno as $key => $value) {
-                                $retorno[$key]['nota'] = self::buscaNota($value['id_envio']);
-                        }
-                }
 
                 return $retorno;
         }

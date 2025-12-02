@@ -126,6 +126,6 @@ class DashboardController extends Zend_Controller_Action
 
 		$this->view->estatistica = Usuario::estatistica($inicio, $fim, $id_usuario);
 
-		$this->view->envios = Envio::lista($id_usuario);
+		$this->view->envios = Envio::lista($inicio, $fim, $id_usuario);
 	}
 }
