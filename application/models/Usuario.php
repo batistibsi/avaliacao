@@ -11,7 +11,11 @@ class Usuario
 
 		$db = Zend_Registry::get('db');
 
-		$select = "select * from avaliacao_usuario where id_usuario = " . $id_usuario;
+		$select = "select a.*, b.*, c.nome as grupo
+				from avaliacao_usuario a 
+				left join avaliacao_grupo_usuario b on a.id_usuario = b.id_usuario
+				left join avaliacao_grupo c on b.id_grupo = c.id_grupo
+				where a.id_usuario = " . $id_usuario;
 
 		$registros = $db->fetchAll($select);
 

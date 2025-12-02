@@ -9,13 +9,13 @@
         <div class="mr-3">
           <div class="rounded-circle d-flex align-items-center justify-content-center"
             style="width:52px;height:52px;background:#e5e7eb;">
-            <span id="indColabIniciais" class="font-weight-bold">AS</span>
+            <span id="indColabIniciais" class="font-weight-bold"><?= Util::gerarIniciais($this->usuario['nome']) ?></span>
           </div>
         </div>
         <div>
           <div class="card-kpi-title">Colaborador</div>
           <div class="card-kpi-value" style="font-size:1.2rem;" id="indColabNome"><?= $this->usuario['nome'] ?></div>
-          <div class="small text-muted" id="indColabGrupo">Grupo: Atendimento</div>
+          <div class="small text-muted" id="indColabGrupo">Grupo: <?= $this->usuario['grupo'] ?></div>
         </div>
       </div>
     </div>
