@@ -43,7 +43,7 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.js"></script>
 
  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
 
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
@@ -55,6 +55,9 @@
 
  </html>
  <script>
+ 	var inicio = '<?= $this->inicio ?>';
+ 	var fim = '<?= $this->fim ?>';
+
  	// Desativa autodescoberta para evitar que o Dropzone inicialize 2x
  	Dropzone.autoDiscover = false;
 

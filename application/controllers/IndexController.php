@@ -11,7 +11,10 @@ class IndexController extends Zend_Controller_Action
 		// Passando o usuário logado para a view
 		$this->view->usuario = Zend_Registry::get('usuario');
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
-		$this->view->permissao = Zend_Registry::get('permissao');
+		$this->view->permissao = Zend_Registry::get('permissao');		
+
+		$this->view->inicio = date('Y-01-01');
+		$this->view->fim = date('Y-m-d');
 
 		$this->view->empresa = [];
 	}
