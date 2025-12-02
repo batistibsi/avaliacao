@@ -75,8 +75,26 @@ class Usuario
 			}
 		}
 
+		$select = "select to_char(b.data_envio, 'YYYY-MM') as mes, avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+			where b.id_grupo = " . $id_grupo . "
+			group by mes;";
+
+		$registros = $db->fetchAll($select);
+
+		$evolucao = [];
+
+		if (count($registros)) {
+			foreach ($registros as $key => $value) {
+				$evolucao['labels'][] = $value['mes'];
+				$evolucao['valores'][] = $value['total'];
+			}
+		}
+
 		$estatistica = [
-			'dimensoes' => $dimensoes
+			'dimensoes' => $dimensoes,
+			'evolucao' => $evolucao
 		];
 
 		return $estatistica;

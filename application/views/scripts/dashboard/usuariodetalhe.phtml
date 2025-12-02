@@ -373,10 +373,10 @@
 
       // Destroi gráficos antigos se existirem
       if (chartRadarDimensoes) chartRadarDimensoes.destroy();
-      //if (chartEvolucaoIndividual) chartEvolucaoIndividual.destroy();
+      if (chartEvolucaoIndividual) chartEvolucaoIndividual.destroy();
 
       criarChartRadarDimensoes(dados);
-      //criarChartEvolucaoIndividual(dados);
+      criarChartEvolucaoIndividual(dados);
     }
 
     /*$('#filtroColaboradorIndividual, #filtroPeriodoIndividual').on('change', function() {
