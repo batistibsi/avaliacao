@@ -5,10 +5,16 @@
     <h4 class="mb-0">Dashboard Colaborador</h4>
     <small>Notas de um colaborador.</small>
   </div>
+  <form id="form_periodo_usuario" class="form-inline mr-2 mb-2">
+    <div class="form-group">
+      <input style="min-width:240px; background:#fff" class="form-control text-center" type="text" id="periodo_usuario" readonly>
+      <input type='hidden' id="inicio_usuario" />
+      <input type='hidden' id="fim_usuario" />
+    </div>
+  </form>
   <div class="d-flex flex-wrap mt-2 mt-md-0">
     <!-- Filtros -->
     <div class="mr-2 mb-2">
-      <label class="small mb-1 font-weight-bold mb-0">Colaborador</label>
       <select id="filtroColaboradorIndividual" class="form-control form-control-sm">
         <?php foreach ($this->usuarios as $value): ?>
           <option <?= ($this->id_usuario == $value['id_usuario']) ? "selected" : "" ?> value="<?= $value['id_usuario'] ?>"><?= $value['nome'] ?></option>
@@ -23,15 +29,84 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
+    var id_usuario = <?= $this->id_usuario ?>;
+
+    function recarregarTela() {
+      carregarTela('../../dashboard/usuariodetalhe?inicio=' + inicio + '&fim=' + fim + '&id_usuario=' + id_usuario, '#content-terciario');
+    }
+
     $('#filtroColaboradorIndividual').select2({
         width: '100%',
         language: "pt-BR",
         theme: 'bootstrap4'
       }).on('change', function() {
         id_usuario = $(this).val();
-        carregarTela('../../dashboard/usuariodetalhe?id_usuario=' + id_usuario, '#content-terciario');
+        recarregarTela();
       })
       .trigger('change');
+
+    $('#inicio_usuario').val(inicio);
+    $('#fim_usuario').val(fim);
+
+    let periodo = $('#periodo_usuario').daterangepicker({
+      startDate: new Date(inicio + ' 00:00:00'),
+      endDate: new Date(fim + ' 23:59:59'),
+      ranges: {
+        'Hoje': [moment(), moment()],
+        'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+        'Semana Atual': [moment().clone().startOf('isoWeek'), moment().clone().endOf('isoWeek')],
+        'Semana Passada': [moment().clone().subtract(1, 'weeks').startOf('isoWeek'), moment().clone().subtract(1, 'weeks').endOf('isoWeek')],
+        'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+        'Mês Atual': [moment().startOf('month'), moment().endOf('month')],
+        'Mês Passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      },
+      "locale": {
+        format: 'DD/MM/YYYY',
+        "separator": " até ",
+        "applyLabel": "Aplicar",
+        "cancelLabel": "Cancelar",
+        "fromLabel": "De",
+        "toLabel": "Até",
+        "customRangeLabel": "Selecionar Data",
+        "daysOfWeek": [
+          "Dom",
+          "Seg",
+          "Ter",
+          "Qua",
+          "Qui",
+          "Sex",
+          "Sáb"
+        ],
+        "monthNames": [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro"
+        ],
+        "firstDay": 0
+      }
+    }, function(start, end) {
+      $('#inicio_usuario').val(start.format('YYYY-MM-DD'));
+      $('#fim_usuario').val(end.format('YYYY-MM-DD'));
+      let form = periodo.closest('form');
+      form.trigger('submit');
+    });
+
+    $("#form_periodo_usuario").submit(function(e) {
+      e.preventDefault();
+      inicio = $("#inicio_usuario").val();
+      fim = $("#fim_usuario").val();
+      recarregarTela();
+    });
 
   });
 </script>
