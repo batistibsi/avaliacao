@@ -90,7 +90,7 @@ class Usuario
 		if (count($registros)) {
 			foreach ($registros as $key => $value) {
 				$evolucao['labels'][] = $value['mes'];
-				$evolucao['valores'][] = $value['total'];
+				$evolucao['valores'][] = (float) round($value['total'],2);
 			}
 		}
 

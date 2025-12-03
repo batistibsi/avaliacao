@@ -69,34 +69,53 @@ class Grupo
 
                 if (count($registros)) {
                         $piorGrupo = $registros[0];
-                        $melhorGrupo = $registros[count($registros) - 1];
+
+                        $mediaPorGrupo = [];
+
+                        foreach ($registros as $value) {
+                                $mediaPorGrupo['labels'][] = $value['nome'];
+                                $mediaPorGrupo['valores'][] = (float)round($value['total'], 2);
+                        }
+
+                        $melhorGrupo = $value;
+                }
+
+                $select = "select to_char(b.data_envio, 'YYYY-MM') as mes, avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+			" . $where . "
+			group by mes;";
+
+                $registros = $db->fetchAll($select);
+
+                $evolucaoGeral = [];
+
+                if (count($registros)) {
+                        foreach ($registros as $key => $value) {
+                                $evolucaoGeral['labels'][] = $value['mes'];
+                                $evolucaoGeral['valores'][] = (float) round($value['total'],2);
+                        }
                 }
 
                 $dadosColetivo = [
                         'kpis' => [
                                 'mediaGeral'   => $mediaGeral,
                                 'melhorGrupo'  => [
-                                        'nome'  => $melhorGrupo?$melhorGrupo['nome']:'NE',
-                                        'media' => $melhorGrupo?(float)$melhorGrupo['total']:0
+                                        'nome'  => $melhorGrupo ? $melhorGrupo['nome'] : 'NE',
+                                        'media' => $melhorGrupo ? (float)$melhorGrupo['total'] : 0
                                 ],
                                 'piorGrupo'    => [
-                                        'nome'  => $piorGrupo?$piorGrupo['nome']:'NE',
-                                        'media' => $piorGrupo?(float)$piorGrupo['total']:0
+                                        'nome'  => $piorGrupo ? $piorGrupo['nome'] : 'NE',
+                                        'media' => $piorGrupo ? (float)$piorGrupo['total'] : 0
                                 ],
                                 'qtdAvaliacoes' => $qtdAvaliacoes,
                         ],
-                        'mediaPorGrupo' => [
-                                'labels'  => ['Atendimento', 'Desenvolvimento', 'Comercial'],
-                                'valores' => [7.1, 8.6, 7.9],
-                        ],
+                        'mediaPorGrupo' => $mediaPorGrupo,
                         'mediaPorDimensao' => [
                                 'labels'  => ['Desempenho', 'Responsabilidade', 'Comunicação', 'Liderança'],
                                 'valores' => [8.0, 7.5, 8.2, 7.4],
                         ],
-                        'evolucaoGeral' => [
-                                'labels'  => ['2025-01', '2025-02', '2025-03', '2025-04'],
-                                'valores' => [7.2, 7.6, 7.9, 8.1],
-                        ],
+                        'evolucaoGeral' => $evolucaoGeral,
                 ];
 
                 return $dadosColetivo;
