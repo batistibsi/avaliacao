@@ -60,7 +60,7 @@ class DashboardController extends Zend_Controller_Action
 			$id_grupo = implode(",", $id_grupo);
 		}
 
-		$this->view->estatistica = Grupo::estatistica($inicio,$fim,$id_grupo);
+		$this->view->estatistica = Grupo::estatistica($inicio, $fim, $id_grupo);
 	}
 
 	public function usuarioAction()
