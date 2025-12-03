@@ -7,7 +7,7 @@
             <div class="card-body">
                 <div class="card-kpi-title">Média geral</div>
                 <div class="card-kpi-value" id="kpiMediaGeralColetivo">--</div>
-                <div class="small text-muted">Notas de 0 a 10 no período selecionado.</div>
+                <div class="small text-muted">Notas no período.</div>
             </div>
         </div>
     </div>
@@ -276,19 +276,10 @@
             criarChartEvolucaoGeral();
         }
 
-        // Filtros – aqui você chamaria AJAX para recarregar dadosColetivo
-        /*$('#filtroPeriodoColetivo, #filtroGrupoColetivo').on('change', function() {
-            // Em produção:
-            // 1) Faz $.getJSON('/api/dashboard/coletivo', { periodo: ..., grupo: ... })
-            // 2) Atualiza dadosColetivo
-            // 3) chama atualizarKpisColetivo() + atualiza os dados dos charts
-            console.log('Troca de filtro coletivo (mock)');
-        });*/
-
         /* ======================== INICIALIZAÇÃO GERAL ======================== */
 
         // Coletivo logo ao carregar
-        //initDashboardColetivo();
+        initDashboardColetivo();
 
     });
 </script>

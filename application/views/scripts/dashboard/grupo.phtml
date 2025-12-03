@@ -1,10 +1,9 @@
 <!-- ====================== DASHBOARD COLETIVO ====================== -->
-<div class="page-header d-flex flex-wrap justify-content-between align-items-center">
+<div class="page-header d-flex flex-wrap justify-content-center justify-content-md-between align-items-center">
     <div>
         <h4 class="mb-0">Dashboard Coletivo</h4>
-        <small>Visão geral das notas por grupo e bloco.</small>
     </div>
-    <form id="form_periodo_grupo" class="form-inline mr-2 mb-2">
+    <form id="form_periodo_grupo" class="form-inline mr-2 mb-0 mb-md-2 mt-3 mt-md-0">
         <div class="form-group">
             <input style="min-width:240px; background:#fff" class="form-control text-center" type="text" id="periodo_grupo" readonly>
             <input type='hidden' id="inicio_grupo" />
@@ -12,7 +11,7 @@
         </div>
     </form>
     <div class="d-flex flex-wrap mt-2 mt-md-0">
-        <div class="mr-2 mb-2">
+        <div class="mr-2 mb-4 mb-md-2">
             <select id="filtroGrupoColetivo" class="form-control form-control-sm">
                 <?php foreach ($this->grupos as $value): ?>
                     <option <?= ($this->id_grupo == $value['id_grupo']) ? "selected" : "" ?> value="<?= $value['id_grupo'] ?>"><?= $value['nome'] ?></option>
@@ -34,7 +33,7 @@
         }
 
         $('#filtroGrupoColetivo').select2({
-                width: '100%',
+                width: '300px',
                 language: "pt-BR",
                 theme: 'bootstrap4'
             }).on('change', function() {

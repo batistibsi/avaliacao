@@ -98,9 +98,10 @@
  		$('html, body').animate({
  			scrollTop: 0
  		}, 600);
- 		conteiner.empty();
 
- 		conteiner.append('<div style="margin-top:20% !important" class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
+ 		//conteiner.empty();
+
+ 		conteiner.html('<div style="margin-top:20% !important" class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
 
  		$.ajax({
  			type: "GET",
