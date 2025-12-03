@@ -66,11 +66,10 @@ class Grupo
 
                 $piorGrupo = false;
                 $melhorGrupo = false;
+                $mediaPorGrupo = [];
 
                 if (count($registros)) {
-                        $piorGrupo = $registros[0];
-
-                        $mediaPorGrupo = [];
+                        $piorGrupo = $registros[0];                        
 
                         foreach ($registros as $value) {
                                 $mediaPorGrupo['labels'][] = $value['nome'];
@@ -97,6 +96,25 @@ class Grupo
                         }
                 }
 
+                $select = "select a.bloco as nome, avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+                        inner join avaliacao_grupo c on c.id_grupo = b.id_grupo
+			" . $where . "
+			group by a.bloco
+                        order by total;";
+
+                $registros = $db->fetchAll($select);
+
+                $mediaPorDimensao = [];
+
+                if (count($registros)) {
+                        foreach ($registros as $value) {
+                                $mediaPorDimensao['labels'][] = $value['nome'];
+                                $mediaPorDimensao['valores'][] = (float)round($value['total'], 2);
+                        }
+                }
+
                 $dadosColetivo = [
                         'kpis' => [
                                 'mediaGeral'   => $mediaGeral,
@@ -111,10 +129,7 @@ class Grupo
                                 'qtdAvaliacoes' => $qtdAvaliacoes,
                         ],
                         'mediaPorGrupo' => $mediaPorGrupo,
-                        'mediaPorDimensao' => [
-                                'labels'  => ['Desempenho', 'Responsabilidade', 'Comunicação', 'Liderança'],
-                                'valores' => [8.0, 7.5, 8.2, 7.4],
-                        ],
+                        'mediaPorDimensao' => $mediaPorDimensao,
                         'evolucaoGeral' => $evolucaoGeral,
                 ];
 
