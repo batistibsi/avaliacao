@@ -196,8 +196,8 @@
     /* ======================== INDIVIDUAL – INICIALIZAÇÃO ======================== */
 
     function preencherCabecalhoIndividual(dados) {
-      $('#indMediaColaborador').text(dados.mediaColab);
-      $('#indMediaGrupo').text(dados.mediaGrupo);
+      $('#indMediaColaborador').text(dados.mediaColab.toFixed(1));
+      $('#indMediaGrupo').text(dados.mediaGrupo.toFixed(1));
     }
 
     function carregarDashboardIndividual() {

@@ -19,6 +19,38 @@ class Grupo
                 return false;
         }
 
+        public static function estatistica($id_grupo)
+        {
+                $dadosColetivo = [
+                        'kpis' => [
+                                'mediaGeral'   => 7.66,
+                                'melhorGrupo'  => [
+                                        'nome'  => 'Desenvolvimento',
+                                        'media' => 8.6,
+                                ],
+                                'piorGrupo'    => [
+                                        'nome'  => 'Atendimento',
+                                        'media' => 7.1,
+                                ],
+                                'qtdAvaliacoes' => 123,
+                        ],
+                        'mediaPorGrupo' => [
+                                'labels'  => ['Atendimento', 'Desenvolvimento', 'Comercial'],
+                                'valores' => [7.1, 8.6, 7.9],
+                        ],
+                        'mediaPorDimensao' => [
+                                'labels'  => ['Desempenho', 'Responsabilidade', 'Comunicação', 'Liderança'],
+                                'valores' => [8.0, 7.5, 8.2, 7.4],
+                        ],
+                        'evolucaoGeral' => [
+                                'labels'  => ['2025-01', '2025-02', '2025-03', '2025-04'],
+                                'valores' => [7.2, 7.6, 7.9, 8.1],
+                        ],
+                ];
+
+                return $dadosColetivo;
+        }
+
         public static function isGerente($id_usuario, $id_grupo)
         {
                 $db = Zend_Registry::get('db');

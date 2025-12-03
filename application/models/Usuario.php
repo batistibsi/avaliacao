@@ -104,7 +104,7 @@ class Usuario
 
 		if (count($registros)) {
 			foreach ($registros as $key => $value) {
-				$mediaColab = number_format($value['total'],1,',','.');
+				$mediaColab = (float) $value['total'];
 			}
 		}
 
@@ -118,7 +118,7 @@ class Usuario
 
 		if (count($registros)) {
 			foreach ($registros as $key => $value) {
-				$mediaGrupo = number_format($value['total'],1,',','.');
+				$mediaGrupo = (float) $value['total'];
 			}
 		}
 

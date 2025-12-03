@@ -38,7 +38,7 @@
             <div class="card-body">
                 <div class="card-kpi-title">Avaliações no período</div>
                 <div class="card-kpi-value" id="kpiQtdAvaliacoes">--</div>
-                <div class="small text-muted">Total de avaliações registradas.</div>
+                <div class="small text-muted">Total de avaliações.</div>
             </div>
         </div>
     </div>
@@ -98,37 +98,11 @@
         /* ===================== DADOS DE EXEMPLO (troque por PHP) ===================== */
 
         // Coletivo – exemplo (aqui você injeta dados reais do PostgreSQL)
-        var dadosColetivo = {
-            kpis: {
-                mediaGeral: 7.8,
-                melhorGrupo: {
-                    nome: 'Desenvolvimento',
-                    media: 8.6
-                },
-                piorGrupo: {
-                    nome: 'Atendimento',
-                    media: 7.1
-                },
-                qtdAvaliacoes: 123
-            },
-            mediaPorGrupo: {
-                labels: ['Atendimento', 'Desenvolvimento', 'Comercial'],
-                valores: [7.1, 8.6, 7.9]
-            },
-            mediaPorDimensao: {
-                labels: ['Desempenho', 'Responsabilidade', 'Comunicação', 'Liderança'],
-                valores: [8.0, 7.5, 8.2, 7.4]
-            },
-            evolucaoGeral: {
-                labels: ['2025-01', '2025-02', '2025-03', '2025-04'],
-                valores: [7.2, 7.6, 7.9, 8.1]
-            }
-        };
+        var dadosColetivo = JSON.parse('<?= json_encode($this->estatistica) ?>');
 
         /* ========================= CHARTS – INSTÂNCIAS ========================= */
 
         var chartMediaPorGrupo, chartMediaPorDimensao, chartEvolucaoGeral;
-        var chartRadarDimensoes, chartEvolucaoIndividual;
 
         // Config padrão
         var chartOptionsBase = {
@@ -224,39 +198,6 @@
             });
         }
 
-        function criarChartRadarDimensoes(dados) {
-            var ctx = document.getElementById('chartRadarDimensoes').getContext('2d');
-            chartRadarDimensoes = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: dados.dimensoes.labels,
-                    datasets: [{
-                            label: 'Colaborador',
-                            data: dados.dimensoes.colab,
-                            backgroundColor: 'rgba(59,130,246,0.2)',
-                            borderColor: 'rgba(59,130,246,1)',
-                            pointBackgroundColor: 'rgba(59,130,246,1)'
-                        },
-                        {
-                            label: 'Grupo',
-                            data: dados.dimensoes.grupo,
-                            backgroundColor: 'rgba(16,185,129,0.2)',
-                            borderColor: 'rgba(16,185,129,1)',
-                            pointBackgroundColor: 'rgba(16,185,129,1)'
-                        }
-                    ]
-                },
-                options: $.extend(true, {}, chartOptionsBase, {
-                    scale: {
-                        ticks: {
-                            min: 0,
-                            max: 10,
-                            stepSize: 1
-                        }
-                    }
-                })
-            });
-        }
 
         /* ========================= COLETIVO – INICIALIZAÇÃO ========================= */
 

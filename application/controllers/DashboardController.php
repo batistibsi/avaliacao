@@ -39,7 +39,7 @@ class DashboardController extends Zend_Controller_Action
 		$this->view->idUsuario = Zend_Registry::get('id_usuario');
 		$this->view->permissao = Zend_Registry::get('permissao');
 
-		$id_grupo = isset($_REQUEST["id_grupo"]) ? (int)  $_REQUEST["id_grupo"] : 0;
+		$id_grupo = isset($_REQUEST["id_grupo"]) ? $_REQUEST["id_grupo"] : null;
 
 		$inicio = isset($_REQUEST['inicio']) ? $_REQUEST['inicio'] : false;
 		$fim = isset($_REQUEST['fim']) ? $_REQUEST['fim'] : false;
@@ -54,17 +54,13 @@ class DashboardController extends Zend_Controller_Action
 			}
 		}
 
-		if (!$id_grupo) {
-			die('Grupo indefinido');
+		if (!empty($id_grupo)) {
+			$id_grupo = explode(",", $id_grupo);
+			$id_grupo = array_map('intval', $id_grupo);
+			$id_grupo = implode(",", $id_grupo);
 		}
 
-		$grupo = Grupo::buscaId($id_grupo);
-
-		if (!$grupo) {
-			die(Grupo::$erro);
-		}
-
-		$this->view->grupo = $grupo;
+		$this->view->estatistica = Grupo::estatistica($id_grupo);
 	}
 
 	public function usuarioAction()
