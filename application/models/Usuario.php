@@ -33,10 +33,12 @@ class Usuario
 
 		$db = Zend_Registry::get('db');
 
+		$where = " and b.data_envio between '" . $inicio . " 00:00:00' and '" . $fim . " 23:59:59' ";
+
 		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
-			where b.id_grupo = " . $id_grupo . "
+			where b.id_grupo = " . $id_grupo . " ".$where."
 			group by a.bloco;";
 
 		$registros = $db->fetchAll($select);
@@ -51,7 +53,7 @@ class Usuario
 		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
-			where b.id_usuario = " . $id_usuario . "
+			where b.id_usuario = " . $id_usuario . " ".$where."
 			group by a.bloco;";
 
 		$registros = $db->fetchAll($select);
@@ -78,7 +80,7 @@ class Usuario
 		$select = "select to_char(b.data_envio, 'YYYY-MM') as mes, avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
-			where b.id_grupo = " . $id_grupo . "
+			where b.id_grupo = " . $id_grupo . " ".$where."
 			group by mes;";
 
 		$registros = $db->fetchAll($select);
@@ -98,7 +100,7 @@ class Usuario
 		$select = "select avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
-			where b.id_grupo = " . $id_grupo . ";";
+			where b.id_grupo = " . $id_grupo . " ".$where.";";
 
 		$registros = $db->fetchAll($select);
 
@@ -111,7 +113,7 @@ class Usuario
 		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
-			where b.id_usuario = " . $id_usuario . "
+			where b.id_usuario = " . $id_usuario . " ".$where."
 			group by a.bloco;";
 
 		$registros = $db->fetchAll($select);

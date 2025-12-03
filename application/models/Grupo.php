@@ -19,20 +19,71 @@ class Grupo
                 return false;
         }
 
-        public static function estatistica($id_grupo)
+        public static function estatistica($inicio, $fim, $id_grupo)
         {
+
+                $db = Zend_Registry::get('db');
+
+                $where = " where b.data_envio between '" . $inicio . " 00:00:00' and '" . $fim . " 23:59:59' ";
+                $where .= !empty($id_grupo) ? " and b.id_grupo in(" . $id_grupo . ") " : "";
+
+                $select = "select avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+                        inner join avaliacao_grupo c on c.id_grupo = b.id_grupo
+			" . $where . ";";
+
+                $registros = $db->fetchAll($select);
+
+                $mediaGeral = 0;
+
+                if (count($registros)) {
+                        $mediaGeral = (float) $registros[0]['total'];
+                }
+
+                $select = "select count(*) as total
+			from avaliacao_envio b
+                        inner join avaliacao_grupo c on c.id_grupo = b.id_grupo
+			" . $where . ";";
+
+                $registros = $db->fetchAll($select);
+
+                $qtdAvaliacoes = 0;
+
+                if (count($registros)) {
+                        $qtdAvaliacoes = (int) $registros[0]['total'];
+                }
+
+                $select = "select c.nome, avg(a.resposta::integer*a.peso) as total
+			from avaliacao_resposta a
+			inner join avaliacao_envio b on a.id_envio = b.id_envio
+                        inner join avaliacao_grupo c on c.id_grupo = b.id_grupo
+			" . $where . "
+			group by c.nome
+                        order by total;";
+
+                $registros = $db->fetchAll($select);
+
+                $piorGrupo = false;
+                $melhorGrupo = false;
+
+                if (count($registros)) {
+                        $piorGrupo = $registros[0];
+                        $melhorGrupo = $registros[count($registros) - 1];
+                }
+
                 $dadosColetivo = [
                         'kpis' => [
-                                'mediaGeral'   => 7.66,
+                                'mediaGeral'   => $mediaGeral,
                                 'melhorGrupo'  => [
-                                        'nome'  => 'Desenvolvimento',
-                                        'media' => 8.6,
+                                        'nome'  => $melhorGrupo?$melhorGrupo['nome']:'NE',
+                                        'media' => $melhorGrupo?(float)$melhorGrupo['total']:0
                                 ],
                                 'piorGrupo'    => [
-                                        'nome'  => 'Atendimento',
-                                        'media' => 7.1,
+                                        'nome'  => $piorGrupo?$piorGrupo['nome']:'NE',
+                                        'media' => $piorGrupo?(float)$piorGrupo['total']:0
                                 ],
-                                'qtdAvaliacoes' => 123,
+                                'qtdAvaliacoes' => $qtdAvaliacoes,
                         ],
                         'mediaPorGrupo' => [
                                 'labels'  => ['Atendimento', 'Desenvolvimento', 'Comercial'],
