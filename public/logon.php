@@ -29,10 +29,10 @@
             <div class="row gy-4 align-items-center">
                 <div class="col-12 col-md-6 col-xl-7">
                     <div class="d-flex justify-content-center">
-                        <div class="col-12 col-xl-9">
+                        <div class="col-12 col-xl-9 text-center">
                             <h2 class="h1 mb-4 text-center">GESTÃO DE AVALIAÇÕES</h2>
                             <hr class="border-primary-subtle mb-4">
-                            <img class="img-fluid mb-4" loading="lazy" src="./images/logo.png" width="700" height="457" alt="Logo do SISTEMA">
+                            <img class="img-fluid mb-4" loading="lazy" src="./images/logo.png" width="300" height="57" alt="Logo do SISTEMA">
                         </div>
                     </div>
                 </div>
