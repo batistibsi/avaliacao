@@ -12,7 +12,7 @@
         </div>
         <div>
           <div class="card-kpi-title">Colaborador</div>
-          <div class="card-kpi-value" style="font-size:1.2rem;" id="indColabNome"><?= $this->usuario['nome'] ?></div>
+          <div class="card-kpi-value text-primary" style="font-size:1.2rem;" id="indColabNome"><?= $this->usuario['nome'] ?></div>
           <div class="small text-muted" id="indColabGrupo">Grupo: <?= $this->usuario['grupo'] ?></div>
         </div>
       </div>
@@ -23,7 +23,7 @@
     <div class="card card-kpi">
       <div class="card-body">
         <div class="card-kpi-title">Média do colaborador</div>
-        <div class="card-kpi-value" id="indMediaColaborador">--</div>
+        <div class="card-kpi-value text-primary" id="indMediaColaborador">--</div>
         <div class="small text-muted">
           <span class="badge badge-soft">Período selecionado</span>
         </div>
@@ -34,7 +34,7 @@
     <div class="card card-kpi">
       <div class="card-body">
         <div class="card-kpi-title">Média do grupo</div>
-        <div class="card-kpi-value" id="indMediaGrupo">--</div>
+        <div class="card-kpi-value text-primary" id="indMediaGrupo">--</div>
         <div class="small text-muted">
           Grupo atual do colaborador.
         </div>
@@ -48,7 +48,7 @@
   <!-- Radar dimensões -->
   <div class="col-lg-6 mb-3">
     <div class="card">
-      <div class="card-header py-2">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center text-primary">
         <strong>Média por bloco</strong> <span class="small text-muted">(Colaborador x Grupo)</span>
       </div>
       <div class="card-body">
@@ -62,7 +62,7 @@
   <!-- Evolução no tempo -->
   <div class="col-lg-6 mb-3">
     <div class="card">
-      <div class="card-header py-2">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center text-primary">
         <strong>Evolução no tempo</strong> <span class="small text-muted">(média por ciclo)</span>
       </div>
       <div class="card-body">

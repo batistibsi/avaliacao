@@ -123,7 +123,6 @@ class Usuario
 			}
 		}
 
-
 		$estatistica = [
 			'dimensoes' => $dimensoes,
 			'evolucao' => $evolucao,

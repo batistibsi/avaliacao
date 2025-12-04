@@ -73,15 +73,23 @@ a:hover {
 }
 
 .text-primary {
-  color: var(--dt-primary) !important;
+  color: var(--dt-active) !important;
 }
 
 .text-info {
-  color: var(--dt-active) !important;
+  color: var(--dt-primary) !important;
 }
 
 .sidebar .nav-link.active {
   color: var(--dt-active) !important;
+}
+
+.nav-link.active {
+  color: var(--dt-active) !important;
+}
+
+.nav-link{
+  color: var(--dt-primary) !important;
 }
 
 .btn-primary,
