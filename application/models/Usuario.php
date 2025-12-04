@@ -45,7 +45,7 @@ class Usuario
 
 		if (count($registros)) {
 			foreach ($registros as $key => $value) {
-				$blocos[$value['bloco']]['grupo'] = $value['total'];
+				$blocos[$value['bloco']]['grupo'] = (float) round($value['total'],2);
 				$blocos[$value['bloco']]['usuario'] = 0;
 			}
 		}
@@ -53,7 +53,7 @@ class Usuario
 		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
-			where b.id_usuario = " . $id_usuario . " ".$where."
+			where b.id_usuario = " . $id_usuario . " and b.id_grupo = " . $id_grupo . " ".$where."
 			group by a.bloco;";
 
 		$registros = $db->fetchAll($select);
@@ -63,7 +63,7 @@ class Usuario
 				if (!isset($blocos[$value['bloco']])) {
 					$blocos[$value['bloco']]['grupo'] = 0;
 				}
-				$blocos[$value['bloco']]['usuario'] = $value['total'];
+				$blocos[$value['bloco']]['usuario'] = (float) round($value['total'],2);
 			}
 		}
 
@@ -106,21 +106,20 @@ class Usuario
 
 		if (count($registros)) {
 			foreach ($registros as $key => $value) {
-				$mediaGrupo = (float) $value['total'];
+				$mediaGrupo = (float) round($value['total'],2);
 			}
 		}
 
-		$select = "select a.bloco, avg(a.resposta::integer*a.peso) as total
+		$select = "select avg(a.resposta::integer*a.peso) as total
 			from avaliacao_resposta a
 			inner join avaliacao_envio b on a.id_envio = b.id_envio
-			where b.id_usuario = " . $id_usuario . " ".$where."
-			group by a.bloco;";
+			where b.id_usuario = " . $id_usuario . " and b.id_grupo = " . $id_grupo . " ".$where.";";
 
 		$registros = $db->fetchAll($select);
 
 		if (count($registros)) {
 			foreach ($registros as $key => $value) {
-				$mediaColab = (float) $value['total'];
+				$mediaColab = (float) round($value['total'],2);
 			}
 		}
 

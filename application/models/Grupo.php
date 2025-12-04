@@ -69,7 +69,7 @@ class Grupo
                 $mediaPorGrupo = [];
 
                 if (count($registros)) {
-                        $piorGrupo = $registros[0];                        
+                        $piorGrupo = $registros[0];
 
                         foreach ($registros as $value) {
                                 $mediaPorGrupo['labels'][] = $value['nome'];
@@ -92,7 +92,7 @@ class Grupo
                 if (count($registros)) {
                         foreach ($registros as $key => $value) {
                                 $evolucaoGeral['labels'][] = $value['mes'];
-                                $evolucaoGeral['valores'][] = (float) round($value['total'],2);
+                                $evolucaoGeral['valores'][] = (float) round($value['total'], 2);
                         }
                 }
 
@@ -111,7 +111,7 @@ class Grupo
                 if (count($registros)) {
                         foreach ($registros as $value) {
                                 $mediaPorDimensao['labels'][] = $value['nome'];
-                                $mediaPorDimensao['valores'][] = (float)round($value['total'], 2);
+                                $mediaPorDimensao['valores'][] = (float) round($value['total'], 2);
                         }
                 }
 
@@ -120,11 +120,11 @@ class Grupo
                                 'mediaGeral'   => $mediaGeral,
                                 'melhorGrupo'  => [
                                         'nome'  => $melhorGrupo ? $melhorGrupo['nome'] : 'NE',
-                                        'media' => $melhorGrupo ? (float)$melhorGrupo['total'] : 0
+                                        'media' => $melhorGrupo ? (float) round($melhorGrupo['total'], 2) : 0
                                 ],
                                 'piorGrupo'    => [
                                         'nome'  => $piorGrupo ? $piorGrupo['nome'] : 'NE',
-                                        'media' => $piorGrupo ? (float)$piorGrupo['total'] : 0
+                                        'media' => $piorGrupo ? (float) round($piorGrupo['total'], 2) : 0
                                 ],
                                 'qtdAvaliacoes' => $qtdAvaliacoes,
                         ],
