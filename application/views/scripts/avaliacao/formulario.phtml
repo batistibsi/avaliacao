@@ -223,13 +223,39 @@
   .block-title {
     margin: 1.25rem 0 .75rem;
   }
+
+  /* Ajustar layout no celular */
+  @media (max-width: 575.98px) {
+    /* breakpoint do xs no Bootstrap 4 */
+
+    /* tira o padding lateral do container dessa tela */
+    .container {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    /* tira o padding lateral da coluna principal */
+    .container .pagina {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    /* opcional: encostar o card na borda também */
+    .card-formulario {
+      border-radius: 0;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 </style>
 
-<div class="container py-2">
+<div class="container">
   <div class="row justify-content-center">
-    <div class="col-lg-10">
+    <div class="pagina col-12 col-md-10">
       <div class="card card-formulario">
-        <div class="card-body p-4 p-md-5">
+        <div class="card-body px-1 px-md-5">
           <h2 class="mb-3 text-primary"><?= $this->formulario['nome'] ?> - <?= $this->usuario['nome'] ?></h2>
           <p class="muted mb-4"></p>
 
