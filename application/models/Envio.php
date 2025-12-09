@@ -183,8 +183,8 @@ class Envio
                                         VALUES (" . $id_envio . ",
                                                 '" . $pergunta['pergunta'] . "',
                                                 '" . $bloco['nome'] . "',
-                                                " . $respostas[$id_pergunta]['nota'] . ",
-                                                '" . $respostas[$id_pergunta]['comentario'] . "',
+                                                " . (int) $respostas[$id_pergunta]['nota'] . ",
+                                                " . $db->quote($respostas[$id_pergunta]['comentario']) . ",
                                                 " . $pergunta['peso'] . ")
                                         RETURNING id_resposta;";
 
@@ -221,7 +221,7 @@ class Envio
                                                 $query = "INSERT INTO avaliacao_arquivo(id_resposta, tipo, nome_original, caminho_arquivo, mime_type, tamanho_bytes)
                                                         VALUES (" . $id_resposta . ",
                                                                 'anexo',
-                                                                '" . $nomeOriginal . "',
+                                                                " . $db->quote($nomeOriginal) . ",
                                                                 '" . $caminhoDestino . "',
                                                                 '" . $file['type'] . "',
                                                                 " . $file['size'] . ")
@@ -249,7 +249,7 @@ class Envio
                                                 $query = "INSERT INTO avaliacao_arquivo(id_resposta, tipo, nome_original, caminho_arquivo, mime_type, tamanho_bytes)
                                                         VALUES (" . $id_resposta . ",
                                                                 'audio',
-                                                                '" . $nomeOriginal . "',
+                                                                " . $db->quote($nomeOriginal) . ",
                                                                 '" . $caminhoDestino . "',
                                                                 '" . $file['type'] . "',
                                                                 " . $file['size'] . ")
