@@ -365,9 +365,9 @@
 		});
 
 		<?php if ($this->registro): ?>
-			var itens = JSON.parse('<?= json_encode($this->blocos) ?>');
+			var itens = <?= json_encode($this->blocos, JSON_UNESCAPED_UNICODE) ?>;
 
-			//console.log(itens);
+			console.log(itens);
 
 			if (itens.length > 0) {
 				let perguntas = [];
